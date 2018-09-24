@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import {fin} from '@/api/finreport'
 export default {
   name: 'FinProfileReport',
   data() {
