@@ -4,8 +4,7 @@
       <el-date-picker
         v-model="selectedMonth"
         type="month"
-        placeholder="选择月">
-      </el-date-picker>
+        placeholder="选择月" />
     </div>
     <el-table :data="tableData3" border size="small" style="margin:15px 5px" height="550">
       <el-table-column fixed prop="itemname" label="项目" width="250" header-align="center" align="left" />
@@ -30,7 +29,7 @@
 </template>
 
 <script>
-import {fin} from '@/api/finreport'
+// import {fin} from '@/api/finreport'
 export default {
   name: 'FinProfileReport',
   data() {

@@ -66,7 +66,7 @@ export const constantRouterMap = [
       {
         path: 'profileReport',
         name: 'profileReport',
-        component: () => import('@/views/fin/profileReport'),
+        component: () => import('@/views/fin/ProfileReport'),
         meta: { title: '利润表', icon: 'form' }
       }
     ]
