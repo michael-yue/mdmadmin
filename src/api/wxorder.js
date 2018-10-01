@@ -1,8 +1,12 @@
 import request from '@/utils/request'
 
-export function listOrder() {
+export function listOrder(branchid, transdate) {
   return request({
     url: '/api/listWxOrder',
-    method: 'get'
+    method: 'get',
+    params: {
+      branchid,
+      transdate
+    }
   })
 }

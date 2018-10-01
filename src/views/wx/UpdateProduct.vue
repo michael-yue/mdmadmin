@@ -1,13 +1,9 @@
 <template>
   <div class="UpdateWxProduct">
-    <div class="header">
-      <el-select v-model="selectedBranch" size="small" class="text-left">
-        <el-option v-for="item in branches" :value="item.branchId" :label="item.name" :key="item.id" name="branch">
-          {{ item.name }}
-        </el-option>
-      </el-select>
-      <!-- <el-button size="small" class="pullright text-right">添加</el-button> -->
-    </div>
+    <el-card style="margin:20px">
+      <SelectBranch @BranchChanged="branchChangeEvent" />
+    </el-card>
+    <!-- <el-card style="margin:20px" class="maincontent"> -->
     <div style="margin:20px">
       <ul class="prodlist">
         <li v-for="item in products" :key="item.productid">
@@ -17,23 +13,28 @@
             <div class="buttons textright">
               <el-button v-show="item.onsale === '0'" type="danger" size="small" @click="updatetrue(item.productid)" >上架</el-button>
               <el-button v-show="item.onsale === '1'" type="success" size="small" @click="updatefalse(item.productid)" >下架</el-button>
-              <el-button v-show="item.onsale === '0'" type="danger" size="small" @click="deleteproduct(item.productid)" >删除</el-button>
+              <!-- <el-button v-show="item.onsale === '0'" type="danger" size="small" @click="deleteproduct(item.productid)" >删除</el-button> -->
             </div>
           </div>
         </li>
       </ul>
+    <!-- </el-card> -->
     </div>
   </div>
 </template>
 
 <script>
-import { getWxBranch, listProductByBranch, updateWxProductOnsale } from '@/api/wxproduct'
+import { listProductByBranch, updateWxProductOnsale } from '@/api/wxproduct'
+import SelectBranch from '@/components/widgets/SelectBranch'
+
 export default {
   name: 'UpdateWxProduct',
+  components: {
+    SelectBranch
+  },
   data() {
     return {
       selectedBranch: '',
-      branches: [],
       products: []
     }
   },
@@ -46,7 +47,6 @@ export default {
     }
   },
   created: function() {
-    this.retriveWxBranch()
   },
   methods: {
     retriveData: function() {
@@ -59,13 +59,8 @@ export default {
         })
       }
     },
-    retriveWxBranch: function() {
-      var that = this
-      getWxBranch().then(response => {
-        that.branches = response.data
-      }).catch(error => {
-        console.log(error)
-      })
+    branchChangeEvent: function(event) {
+      this.selectedBranch = event.branchId
     },
     updatetrue: function(productid) {
       console.log('update true')
@@ -87,6 +82,12 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.maincontent{
+  // height: calc(100vh - 162px)
+}
+</style>
+
 <style scoped>
 ul.prodlist{
   list-style-type: none;
@@ -98,14 +99,15 @@ ul.prodlist>li {
   width: 100%;
   padding-left: 0px;
   border-bottom: solid 1px #ebebeb;
+  justify-content: center;
 }
 ul.prodlist>li:first{
   border-top: solid 1px #ebebeb;
 }
-.namecontents{width:100%; display: inline-flex;padding: 5px 0px}
-.id{flex-grow: 1;flex-shrink: 1;flex-basis: 0; height:56px; line-height:56px;}
-.buttons{flex-grow: 3;flex-shrink: 1;flex-basis: 0;}
-.name{flex-grow: 4;flex-shrink: 1;flex-basis: 0;height:56px; line-height:56px;}
+.namecontents{width:100%; display: inline-flex;padding: 5px 0px; justify-content: center;}
+.id{flex-grow: 1;flex-shrink: 1;flex-basis: 0; font-size:14px; color:#303133}
+.buttons{flex-grow: 3;flex-shrink: 1;flex-basis: 0; }
+.name{flex-grow: 4;flex-shrink: 1;flex-basis: 0; font-size:14px; color:#303133}
 .textleft{text-align:left}
 .textright{text-align:right}
 .header{width:100%;padding:5px;margin:0;display: flex; background: #f2f2f2}
