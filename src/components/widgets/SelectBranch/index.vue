@@ -35,16 +35,11 @@ export default {
     }
   },
   created: function() {
-    // console.log(store.getters.branches)
     const roles = store.getters.roles
-    console.log(roles, '1')
     if (roles.includes('branch')) {
       this.show = false
-      // this.selectedBranchId = ''
-      console.log(roles, '1')
     } else {
       this.show = true
-      console.log(roles, '0')
       this.retriveWxBranch()
     }
   },

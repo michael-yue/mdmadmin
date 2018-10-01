@@ -1,0 +1,12 @@
+// Add 
+.el-table td.indent1{ text-indent:24px}
+.el-table td.indent2{ text-indent:48px}
+.el-table td.indent3{ text-indent:72px}
+
+body .el-table th.gutter{
+    display: table-cell!important;
+}
+ 
+body .el-table colgroup.gutter{
+    display: table-cell!important;
+}

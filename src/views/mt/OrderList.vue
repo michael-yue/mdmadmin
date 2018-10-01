@@ -1,13 +1,8 @@
 <template>
   <div class="orderlist">
-    <el-card style="margin:20px">
-      <SelectBranch @BranchChanged="branchChangeEvent"/>
-      <el-date-picker v-model="selectedDate" type="date" size="small" placeholder="选择月" style="width:140px"/>
-      <el-button type="primary" size="small" style="margin-left:20px" @click="retrieveData" >查询</el-button>
-    </el-card>
     <div style="margin:20px">
       <ul class="">
-        <li v-for="item in orders" :key="item.orderid">
+        <li v-for="item in orderlist" :key="item.orderid">
           <div class="ordercontents">
             <div class="time textleft">{{ item.ordertime }}</div>
             <div class="tableid textleft">{{ item.tableid }}</div>
@@ -24,35 +19,32 @@
 </template>
 
 <script>
-import { parseTime } from '@/utils'
 import { listOrder } from '@/api/wxorder'
-import SelectBranch from '@/components/widgets/SelectBranch'
+import { getWxBranch } from '@/api/wxproduct'
 
 export default {
   name: 'OrderList',
-  components: {
-    SelectBranch
-  },
   data() {
     return {
       selectedBranch: '',
-      selectedDate: '',
+      branches: [],
       orders: []
     }
   },
   created: function() {
-    // if (store.getters.roles.includes('branch')) {
-    // }
+    this.retriveWxBranch()
   },
   methods: {
-    branchChangeEvent: function(event) {
-      this.selectedBranch = event.branchId
+    retriveWxBranch: function() {
+      var that = this
+      getWxBranch().then(response => {
+        that.branches = response.data
+      }).catch(error => {
+        console.log(error)
+      })
     },
     retrieveData: function() {
-      console.log(this.selectedBranch)
-      console.log(this.selectedDate)
-      const qdate = parseTime(this.selectedDate, '{y}-{m}-{d}')
-      listOrder(this.selectedBranch, qdate).then(response => {
+      listOrder().then(response => {
         this.orders = response.data
       }).catch(error => {
         console.log(error)
@@ -61,7 +53,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-ul {list-style: none}
-</style>

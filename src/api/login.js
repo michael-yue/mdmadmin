@@ -25,3 +25,10 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function qyWxlogin() {
+  return request({
+    url: '/api/qyWxlogin',
+    method: 'get'
+  })
+}

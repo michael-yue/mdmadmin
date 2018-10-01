@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/login'
+import { login, logout, getInfo, qyWxlogin } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
@@ -6,7 +6,8 @@ const user = {
     token: getToken(),
     name: '',
     avatar: '',
-    roles: []
+    roles: [],
+    branches: []
   },
 
   mutations: {
@@ -21,6 +22,9 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_BRANCHES: (state, branches) => {
+      state.branches = branches
     }
   },
 
@@ -30,6 +34,7 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
+          // console.log(response)
           const data = response.data
           setToken(data.token)
           commit('SET_TOKEN', data.token)
@@ -45,6 +50,7 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(response => {
           const data = response.data
+          console.log(data)
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', data.roles)
           } else {
@@ -52,6 +58,7 @@ const user = {
           }
           commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.avatar)
+          commit('SET_BRANCHES', data.branch)
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -65,6 +72,7 @@ const user = {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
+          commit('SET_BRANCHES', [])
           removeToken()
           resolve()
         }).catch(error => {
@@ -79,6 +87,17 @@ const user = {
         commit('SET_TOKEN', '')
         removeToken()
         resolve()
+      })
+    },
+
+    QywxLogin({ commit }) {
+      return new Promise(resolve => {
+        qyWxlogin().then(response => {
+          console.log(response)
+          // setToken(data.token)
+          commit('SET_TOKEN', '')
+          resolve()
+        })
       })
     }
   }

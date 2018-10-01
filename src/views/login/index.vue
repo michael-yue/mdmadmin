@@ -37,20 +37,22 @@
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
-
+// import { isvalidUsername } from '@/utils/validate'
+import store from '@/store'
 export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!isvalidUsername(value)) {
-        callback(new Error('请输入正确的用户名'))
-      } else {
-        callback()
-      }
+      // console.log(rule, value)
+      // if (!isvalidUsername(value)) {
+      //   callback(new Error('请输入正确的用户名'))
+      // } else {
+      //   callback()
+      // }
+      callback()
     }
     const validatePass = (rule, value, callback) => {
-      if (value.length < 5) {
+      if (value.length < 2) {
         callback(new Error('密码不能小于5位'))
       } else {
         callback()
@@ -67,7 +69,7 @@ export default {
       },
       loading: false,
       pwdType: 'password',
-      redirect: undefined
+      redirect: 'dashboard'
     }
   },
   watch: {
@@ -76,6 +78,17 @@ export default {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true
+    }
+  },
+  created: function() {
+    console.log(store.getters.device)
+    // 如果是企业微信，
+    if (store.getters.device === 'qywx') {
+      console.log('sa')
+      store.dispatch('QywxLogin').then(() => {
+        // Message.error(err || 'Verification failed, please login again')
+        // next({ path: '/' })
+      })
     }
   },
   methods: {

@@ -35,43 +35,114 @@ export const constantRouterMap = [
       path: 'dashboard',
       component: () => import('@/views/dashboard/index')
     }]
+  }
+]
+
+export const asyncRouterMap = [
+  {
+    path: '/example',
+    component: Layout,
+    redirect: '/wx/table',
+    name: 'Example',
+    meta: { title: '报表', icon: 'example', roles: ['finance'] },
+    children: [
+      {
+        path: 'table',
+        name: 'Table',
+        component: () => import('@/views/fin/ProfileReport'),
+        meta: { title: '利润表', icon: 'table', roles: ['finance'] }
+      },
+      {
+        path: 'tree',
+        name: 'Tree',
+        component: () => import('@/views/fin/ProfileReportMaintain'),
+        meta: { title: '利润表维护', icon: 'tree', roles: ['finance'] }
+      }
+    ]
   },
 
   {
     path: '/wx',
     component: Layout,
-    redirect: '/wx/table',
-    name: 'wx',
-    meta: { title: '微信', icon: 'example' },
+    meta: { title: '微信', icon: 'example', roles: ['branch'] },
     children: [
       {
         path: 'wxUpdateProduct',
         name: 'wxUpdateProduct',
         component: () => import('@/views/wx/UpdateProduct'),
-        meta: { title: '微信产品', icon: 'table' }
+        meta: { title: '微信产品', icon: 'table', roles: ['branch'] }
       },
       {
         path: 'wxOrderList',
         name: 'wxOrderList',
         component: () => import('@/views/wx/OrderList'),
-        meta: { title: '微信订单', icon: 'tree' }
+        meta: { title: '微信订单', icon: 'tree', roles: ['branch'] }
       }
     ]
   },
-
   {
-    path: '/fin',
+    path: '/sales',
     component: Layout,
+    meta: { title: '营运报表', icon: 'example', roles: ['branch'] },
     children: [
       {
-        path: 'profileReport',
-        name: 'profileReport',
-        component: () => import('@/views/fin/ProfileReport'),
-        meta: { title: '利润表', icon: 'form' }
+        path: 'cashreport',
+        name: 'cashreport',
+        component: () => import('@/views/sales/cashreport'),
+        meta: { title: '营业收入报表', icon: 'table', roles: ['branch'] }
+      },
+      {
+        path: 'cashperiodreport',
+        name: 'cashperiodreport',
+        component: () => import('@/views/sales/cashperiodreport'),
+        meta: { title: '现金收入报表', icon: 'tree', roles: ['branch'] }
+      },
+      {
+        path: 'salesreport',
+        name: 'salesreport',
+        component: () => import('@/views/sales/salesreport'),
+        meta: { title: '产品销售报表', icon: 'tree', roles: ['branch'] }
       }
     ]
   },
-
+  {
+    path: '/qywx',
+    component: Layout,
+    meta: { title: '企业微信', icon: 'example' },
+    children: [
+      {
+        path: 'qywxUserList',
+        name: 'qywxUserList',
+        component: () => import('@/views/qywx/UserList'),
+        meta: { title: '用户设置', icon: 'table' }
+      }
+      // {
+      //   path: 'wxUpdateProduct1',
+      //   name: 'wxUpdateProduct',
+      //   component: () => import('@/views/qywx/UserList'),
+      //   meta: { title: '用户设置', icon: 'table' }
+      // }
+    ]
+  },
+  // {
+  //   path: '/mt',
+  //   component: Layout,
+  //   meta: { title: '美团', icon: 'example' },
+  //   children: [
+  //     {
+  //       path: 'wxUpdateProduct',
+  //       name: 'wxUpdateProduct',
+  //       component: () => import('@/views/mt/UpdateProduct'),
+  //       meta: { title: '美团产品', icon: 'table', roles: ['branch'] }
+  //     },
+  //     {
+  //       path: 'wxOrderList',
+  //       name: 'wxOrderList',
+  //       component: () => import('@/views/mt/OrderList'),
+  //       meta: { title: '美团订单', icon: 'tree', roles: ['branch'] }
+  //     }
+  //   ]
+  // },
   { path: '*', redirect: '/404', hidden: true }
 ]
 
