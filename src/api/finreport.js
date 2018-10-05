@@ -6,14 +6,20 @@ export function getReportData() {
   })
 }
 
-export function getProfileMonthData() {
+export function getProfileMonthData(year, month, branchid) {
   return request({
     url: '/api/listProfileMonth',
-    method: 'get'
+    method: 'get',
+    params: {
+      year,
+      month,
+      branchid
+    }
   })
 }
 
-export function saveProfileMonthData(month, branchid, monthdata) {
+export function saveProfileMonthData(year, month, branchid, monthdata) {
+  console.log(year)
   console.log(month)
   console.log(branchid)
   console.log(monthdata)
@@ -21,6 +27,7 @@ export function saveProfileMonthData(month, branchid, monthdata) {
     url: '/api/saveProfileMonthData',
     method: 'post',
     data: {
+      year,
       month,
       branchid,
       monthdata
