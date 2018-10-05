@@ -52,6 +52,7 @@ export default {
         el.addEventListener('keyup', (ev) => {
           console.log('key')
           if (ev.keyCode === 13) {
+            console.log(vnode)
             const nextInput = vnode.context.$refs[value]
             console.log(nextInput)
             if (nextInput && typeof nextInput.focus === 'function') {
