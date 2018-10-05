@@ -34,10 +34,10 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
-          // console.log(response)
           const data = response.data
           setToken(data.token)
           commit('SET_TOKEN', data.token)
+          commit('SET_ROLES', [])
           resolve()
         }).catch(error => {
           reject(error)
@@ -48,6 +48,7 @@ const user = {
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
+        console.log(state.token)
         getInfo(state.token).then(response => {
           const data = response.data
           console.log(data)

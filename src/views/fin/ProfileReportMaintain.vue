@@ -7,18 +7,30 @@
       <el-button size="small" type="success" @click="saveData">保存</el-button>
     </el-card>
     <el-card style="margin:20px">
-      <el-table :data="monthdata" :cell-class-name="getCellClass" border size="small" height="850" >
+      <el-table :data="monthdata" :cell-class-name="getCellClass" border size="small" height="700" >
         <el-table-column fixed prop="itemname" label="项目" width="200" header-align="center" align="left" />
         <el-table-column prop="planamount" label="计划" width="200" header-align="center" align="right">
           <template slot-scope="props">
-            <el-input v-model= "props.row.planamount" size="mini" type="number" />
+            <div v-if="props.row.itemtype === '1'">
+              <el-input v-focus-next-on-enter v-model= "props.row.planamount" :class="'textright'" size="mini" type="number" @keyup.enter="nextTick" />
+            </div>
+            <div v-else>
+              {{ props.row.planamount }}
+            </div>
           </template>
         </el-table-column>
+        <el-table-column prop="planpercent" label="%" width="200" header-align="center" align="right" />
         <el-table-column prop="actualamount" label="实际" width="200" header-align="center" align="right">
           <template slot-scope="props">
-            <el-input v-model= "props.row.actualamount" size="mini" style="width:100px;text-align:center"/>
+            <div v-if="props.row.itemtype === '1'">
+              <el-input v-model= "props.row.actualamount" size="mini" type="number" />
+            </div>
+            <div v-else>
+              {{ props.row.planamount }}
+            </div>
           </template>
         </el-table-column>
+        <el-table-column prop="actualpercent" label="%" width="200" header-align="center" align="right" />
       </el-table>
     </el-card>
   </div>
@@ -27,11 +39,29 @@
 <script>
 import SelectBranch from '@/components/widgets/SelectBranch'
 import { getProfileMonthData, saveProfileMonthData } from '@/api/finreport'
+// import { calc } from '@/utils/formula'
 
 export default {
   name: 'FinProfileReportMaintain',
   components: {
     SelectBranch
+  },
+  directives: {
+    focusNextOnEnter: {
+      bind: function(el, { value }, vnode) {
+        el.addEventListener('keyup', (ev) => {
+          console.log('key')
+          if (ev.keyCode === 13) {
+            const nextInput = vnode.context.$refs[value]
+            console.log(nextInput)
+            if (nextInput && typeof nextInput.focus === 'function') {
+              nextInput.focus()
+              nextInput.select()
+            }
+          }
+        })
+      }
+    }
   },
   data() {
     return {
@@ -41,6 +71,16 @@ export default {
       active: false
     }
   },
+  computed: {
+    totalLine: function() {
+      var totalline = 0
+      for (let i = 0; i < this.monthdata.length; i++) {
+        totalline = totalline + 1
+      }
+      console.log(totalline)
+      return totalline
+    }
+  },
   watch: {
     branchId(val, oldval) {
       console.log(val)
@@ -48,6 +88,9 @@ export default {
   },
   created: function() {
     // this.getData()
+    // var test1 = '1+((2-3)*5+10)/3'
+    // var result1 = calc(test1)
+    // console.log(test1 + ' = ' + result1)
   },
   methods: {
     branchChangedEvent(event) {
@@ -115,5 +158,12 @@ ul.profilereport>li {
 .planamount{flex-grow: 1;flex-shrink: 1;flex-basis: 0; width:150px}
 .active{background:#eef2fe}
 .textright{text-align:right}
+
+.el-input>input{
+  text-align:right
+}
+.el-table__header{
+  background: #c0c0d0;
+}
 </style>
 

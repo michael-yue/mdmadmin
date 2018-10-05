@@ -60,18 +60,15 @@ export default {
       this.selectedBranch = event.branchId
     },
     updatetrue: function(productid) {
-      console.log('update true')
       this.update(productid, 1)
     },
     updatefalse: function(productid) {
-      console.log('update false')
       this.update(productid, 0)
     },
     update: function(productid, flag) {
       var that = this
       updateWxProductOnsale(that.selectedBranch, productid, flag).then(response => {
         that.retriveData()
-        console.log('updated')
       }).catch(error => {
         console.log(error)
       })

@@ -4,7 +4,8 @@
     <breadcrumb />
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
-        <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+        <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
+        <div>{{ name }}</div>
         <i class="el-icon-caret-bottom"/>
       </div>
       <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -23,6 +24,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import store from '@/store'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
@@ -31,11 +33,19 @@ export default {
     Breadcrumb,
     Hamburger
   },
+  data() {
+    return {
+      name: 'aa'
+    }
+  },
   computed: {
     ...mapGetters([
       'sidebar',
       'avatar'
     ])
+  },
+  created: function() {
+    this.name = store.getters.name
   },
   methods: {
     toggleSideBar() {

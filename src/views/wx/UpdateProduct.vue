@@ -1,8 +1,10 @@
 <template>
   <div class="UpdateWxProduct">
-    <el-card style="margin:20px">
-      <SelectBranch @BranchChanged="branchChangeEvent" />
-    </el-card>
+    <div v-if="!roleBranch">
+      <el-card style="margin:20px">
+        <SelectBranch @BranchChanged="branchChangeEvent" />
+      </el-card>
+    </div>
     <!-- <el-card style="margin:20px" class="maincontent"> -->
     <div style="margin:20px">
       <ul class="prodlist">
@@ -24,6 +26,7 @@
 </template>
 
 <script>
+import store from '@/store'
 import { listProductByBranch, updateWxProductOnsale } from '@/api/wxproduct'
 import SelectBranch from '@/components/widgets/SelectBranch'
 
@@ -34,24 +37,32 @@ export default {
   },
   data() {
     return {
+      roleBranch: false,
       selectedBranch: '',
       products: []
     }
   },
   watch: {
     selectedBranch(val, oldval) {
-      console.log(val, oldval)
+      // console.log(val, oldval)
       if (val !== 0) {
         this.retriveData()
       }
     }
   },
   created: function() {
+    if (store.getters.roles.includes('branch')) {
+      console.log(store.getters.branches)
+      this.selectedBranch = store.getters.branches
+      this.roleBranch = true
+      // this.retriveData()
+    }
   },
   methods: {
     retriveData: function() {
       var that = this
-      if (this.selectedBranch !== 0) {
+      if (this.selectedBranch !== '') {
+        console.log('this.selectedBranch=' + this.selectedBranch)
         listProductByBranch(this.selectedBranch).then(response => {
           that.products = response.data
         }).catch(error => {
