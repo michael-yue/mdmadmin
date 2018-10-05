@@ -12,9 +12,9 @@
         <el-table-column prop="planamount" label="计划" width="200" header-align="center" align="right">
           <template slot-scope="props">
             <div v-if="props.row.itemtype === '1'">
-              <el-input v-focus-next-on-enter v-model= "props.row.planamount" :class="'textright'" size="mini" type="number" @keyup.enter="nextTick" />
+              <el-input v-focus-next-on-enter v-model= "props.row.planamount" size="mini" @keyup.enter="nextTick" />
             </div>
-            <div v-else>
+            <div v-else class="labelamount">
               {{ props.row.planamount }}
             </div>
           </template>
@@ -23,9 +23,9 @@
         <el-table-column prop="actualamount" label="实际" width="200" header-align="center" align="right">
           <template slot-scope="props">
             <div v-if="props.row.itemtype === '1'">
-              <el-input v-model= "props.row.actualamount" size="mini" type="number" />
+              <el-input v-model= "props.row.actualamount" size="mini" />
             </div>
-            <div v-else>
+            <div v-else class="labelamount">
               {{ props.row.planamount }}
             </div>
           </template>
@@ -39,6 +39,7 @@
 <script>
 import SelectBranch from '@/components/widgets/SelectBranch'
 import { getProfileMonthData, saveProfileMonthData } from '@/api/finreport'
+import { parseTime } from '@/utils'
 // import { calc } from '@/utils/formula'
 
 export default {
@@ -50,10 +51,11 @@ export default {
     focusNextOnEnter: {
       bind: function(el, { value }, vnode) {
         el.addEventListener('keyup', (ev) => {
-          console.log('key')
           if (ev.keyCode === 13) {
             console.log(vnode)
-            const nextInput = vnode.context.$refs[value]
+            console.log(value)
+            // const nextInput = vnode.context.$refs[value]
+            const nextInput = vnode.elm
             console.log(nextInput)
             if (nextInput && typeof nextInput.focus === 'function') {
               nextInput.focus()
@@ -85,6 +87,10 @@ export default {
   watch: {
     branchId(val, oldval) {
       console.log(val)
+    },
+    monthdata(val, oldval) {
+      console.log(val)
+      console.log(this.monthdata.indexOf(1))
     }
   },
   created: function() {
@@ -95,12 +101,13 @@ export default {
   },
   methods: {
     branchChangedEvent(event) {
-      console.log('parent : ' + event.branchId)
       this.branchId = event.branchId
     },
     getData() {
       var that = this
-      getProfileMonthData().then(response => {
+      const year = parseTime(this.selectedMonth, '{y}')
+      const month = parseTime(this.selectedMonth, '{m}')
+      getProfileMonthData(year, month, this.branchId).then(response => {
         that.monthdata = response.data
         console.log(response.data)
       }).catch(error => {
@@ -108,16 +115,17 @@ export default {
       })
     },
     saveData() {
-      console.log(this.monthdata)
-      saveProfileMonthData(this.selectedMonth, this.branchId, this.monthdata).then(response => {
+      // this.selectedMonth check
+      // this.branchId check
+      const year = parseTime(this.selectedMonth, '{y}')
+      const month = parseTime(this.selectedMonth, '{m}')
+      saveProfileMonthData(year, month, this.branchId, this.monthdata).then(response => {
         console.log(response.data)
       }).catch(error => {
         console.log(error)
       })
     },
     getCellClass: function({ row, column, rowIndex, columnIndex }) {
-      // 第八列添加 red 类
-      // console.log(row, column, rowIndex, columnIndex)
       if (columnIndex === 0) {
         if (row.itemlevel !== '0') {
           return 'indent' + row.itemlevel
@@ -158,13 +166,13 @@ ul.profilereport>li {
 .actualamount{flex-grow: 1;flex-shrink: 1;flex-basis: 0; width:100px}
 .planamount{flex-grow: 1;flex-shrink: 1;flex-basis: 0; width:150px}
 .active{background:#eef2fe}
-.textright{text-align:right}
-
-.el-input>input{
-  text-align:right
+.el-input >>> .el-input__inner {
+    text-align: right;
+    /* background: #fe2; */
 }
-.el-table__header{
+.el-table th{
   background: #c0c0d0;
 }
+.labelamount{padding-right:16px;font-size:12px;font-family:sans-serif}
 </style>
 
