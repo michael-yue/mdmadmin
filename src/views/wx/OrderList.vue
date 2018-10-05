@@ -6,7 +6,7 @@
       <el-button type="primary" size="small" style="margin-left:20px" @click="retrieveData" >查询</el-button>
     </el-card>
     <el-card style="margin:20px">
-      <el-table :data="orders" :class="{'tablestyle': true}" :cell-class-name="getCellClass" :expand-row-keys="billid" :row-key="getRowKeys" height="750" border size="small" @row-click="rowClick">
+      <el-table :data="orders" :class="{'tablestyle': true}" :cell-class-name="getCellClass" :expand-row-keys="expands" :row-key="getRowKeys" height="750" border size="small" @row-click="rowClick">
         <el-table-column fixed prop="ordertime" label="时间" width="200" header-align="center" label-class-name	="header" align="left" />
         <el-table-column fixed prop="tableid" label="桌号" width="200" header-align="center" align="right" />
         <el-table-column fixed prop="amount" label="金额" width="200" header-align="center" align="right" />
