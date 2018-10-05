@@ -14,7 +14,7 @@ const symbolPriority = {
 // 如果栈外的操作符优先级低于或等于栈内的优先级，输出栈内的符号，并入栈栈外的符号
 // 中缀表达式遍历完成，但是栈中还有符号存在，一一出栈输出
 function operaSymbol(char, symArr, resArr) {
-  var lastChar = symArr[symArr.length - 1]
+  let lastChar = symArr[symArr.length - 1]
   if (!lastChar) {
     symArr.push(char)
     return
@@ -22,7 +22,7 @@ function operaSymbol(char, symArr, resArr) {
   if (char === '(') {
     symArr.push(char)
   } else if (char === ')') {
-    var curChar = symArr.pop()
+    let curChar = symArr.pop()
     while (curChar !== '(' && curChar !== null) {
       resArr.push(curChar)
       curChar = symArr.pop()
@@ -31,7 +31,7 @@ function operaSymbol(char, symArr, resArr) {
     symArr.push(char)
   } else if (symbolPriority[char] <= symbolPriority[lastChar]) {
     while (lastChar && (symbolPriority[char] <= symbolPriority[lastChar])) {
-      var curChar1 = symArr.pop()
+      let curChar1 = symArr.pop()
       resArr.push(curChar1)
       lastChar = symArr[symArr.length - 1]
     }
@@ -79,22 +79,22 @@ function count(opera, num1, num2) {
   }
 }
 export function calc(str) {
-  var expr = toSuffixExpre(str)
+  let expr = toSuffixExpre(str)
   if (!expr) {
     return 0
   }
   // 字符串为空，返回0
-  var arr = expr.split(' ')
+  let arr = expr.split(' ')
   arr = arr.filter(function(val) {
     return !(!val || val === '')
   })
-  var elems = []
-  var item = arr.shift()
+  let elems = []
+  let item = arr.shift()
   while (item) {
     if (!isNaN(item)) {
       elems.push(item)
     } else {
-      var res = count(item, elems.pop(), elems.pop())
+      let res = count(item, elems.pop(), elems.pop())
       elems.push(res)
     }
     item = arr.shift()

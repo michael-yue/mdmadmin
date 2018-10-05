@@ -44,6 +44,7 @@ export default {
     }
   },
   methods: {
+    // 这里不对，权限
     retriveWxBranch: function() {
       var that = this
       getWxBranch().then(response => {
