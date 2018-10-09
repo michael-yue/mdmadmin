@@ -1,8 +1,16 @@
 import request from '@/utils/request'
-export function getReportData() {
+export function getReportData(fromyear, frommonth, toyear, tomonth, branchid, type) {
   return request({
     url: '/api/listProfileReport',
-    method: 'get'
+    method: 'get',
+    params: {
+      fromyear,
+      frommonth,
+      toyear,
+      tomonth,
+      branchid,
+      type
+    }
   })
 }
 
@@ -19,10 +27,6 @@ export function getProfileMonthData(year, month, branchid) {
 }
 
 export function saveProfileMonthData(year, month, branchid, monthdata) {
-  console.log(year)
-  console.log(month)
-  console.log(branchid)
-  console.log(monthdata)
   return request({
     url: '/api/saveProfileMonthData',
     method: 'post',
