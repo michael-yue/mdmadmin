@@ -31,7 +31,7 @@ function operaSymbol(char, symArr, resArr) {
     symArr.push(char)
   } else if (symbolPriority[char] <= symbolPriority[lastChar]) {
     while (lastChar && (symbolPriority[char] <= symbolPriority[lastChar])) {
-      let curChar1 = symArr.pop()
+      const curChar1 = symArr.pop()
       resArr.push(curChar1)
       lastChar = symArr[symArr.length - 1]
     }
@@ -69,17 +69,18 @@ function toSuffixExpre(str) {
 function count(opera, num1, num2) {
   switch (opera) {
     case '+':
-      return Number(num2) + Number(num1)
+      return Number(Number(num2) + Number(num1)).toFixed(2)
     case '-':
-      return Number(num2) - Number(num1)
+      return Number(Number(num2) - Number(num1)).toFixed(2)
     case '*':
-      return Number(num2) * Number(num1)
+      return Number(Number(num2) * Number(num1)).toFixed(2)
     case '/':
-      return Number(num2) / Number(num1)
+      return (Number(num1) === 0) ? 0 : Number(Number(num2) / Number(num1)).toFixed(4)
   }
 }
-export function calc(str) {
-  let expr = toSuffixExpre(str)
+// 字符串计算，输入参数为表达式
+export function calcStr(str) {
+  const expr = toSuffixExpre(str)
   if (!expr) {
     return 0
   }
@@ -88,16 +89,86 @@ export function calc(str) {
   arr = arr.filter(function(val) {
     return !(!val || val === '')
   })
-  let elems = []
+  const elems = []
   let item = arr.shift()
   while (item) {
     if (!isNaN(item)) {
       elems.push(item)
     } else {
-      let res = count(item, elems.pop(), elems.pop())
+      const res = count(item, elems.pop(), elems.pop())
       elems.push(res)
     }
     item = arr.shift()
   }
   return elems.pop()
+}
+// type: 1: planamount, 2: planpercent 3: actualamount 4:actualpercent
+function getformula(data, i, type) {
+  if (type === 1 || type === 3) {
+    // console.log(data[i].itemname + '=' + data[i].itemformula)
+    return toSuffixExpre(data[i].itemformula)
+  } else if (type === 2 || type === 4) {
+    // console.log(data[i].itemname + '=' + data[i].itemformula)
+    return toSuffixExpre(data[i].itempercentformula)
+  } else {
+    return null
+  }
+}
+export function calc(data, i, type) {
+  const expr = getformula(data, i, type)
+  if (!expr) {
+    return data
+  }
+  // 字符串为空，返回0
+  let arr = expr.split(' ')
+  arr = arr.filter(function(val) {
+    return !(!val || val === '')
+  })
+  // arr中的数字转换成data中的amount
+  // arr = arr.filter(function(val) {
+  //   if (symbol.includes(val)) {
+  //     // return val
+  //     return 1
+  //   } else {
+  //     console.log(val)
+  //     const a = data.find((element) => (element.itemid === Number(val)))
+  //     console.log('found ===========================')
+  //     console.log(a)
+  //     // return a.planamount
+  //     return 2
+  //   }
+  // })
+  for (let i = 0; i < arr.length; i++) {
+    if (!symbol.includes(arr[i])) {
+      const a = data.find((element) => (element.itemid === Number(arr[i])))
+      if (type === 1 || type === 2) {
+        arr[i] = Number(a.planamount)
+      } else {
+        arr[i] = Number(a.actualamount)
+      }
+    }
+  }
+  // 计算
+  const elems = []
+  let item = arr.shift()
+  while (typeof (item) !== 'undefined') {
+    if (!isNaN(item)) {
+      elems.push(item)
+    } else {
+      const res = count(item, elems.pop(), elems.pop())
+      elems.push(res)
+    }
+    item = arr.shift()
+  }
+  const poped = elems.pop()
+  if (type === 1) {
+    data[i].planamount = poped
+  } else if (type === 2) {
+    data[i].planpercent = poped
+  } else if (type === 3) {
+    data[i].actualamount = poped
+  } else if (type === 4) {
+    data[i].actualpercent = poped
+  }
+  return data
 }
