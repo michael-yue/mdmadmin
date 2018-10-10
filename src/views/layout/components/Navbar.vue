@@ -78,13 +78,13 @@ export default {
     color: red;
   }
   .avatar-container {
-    height: 50px;
+    // height: 50px;
     display: inline-block;
     position: absolute;
     right: 35px;
     .avatar-wrapper {
       cursor: pointer;
-      margin-top: 5px;
+      margin-top: 0px;
       position: relative;
       .user-avatar {
         width: 40px;
@@ -94,7 +94,7 @@ export default {
       .el-icon-caret-bottom {
         position: absolute;
         right: -20px;
-        top: 25px;
+        top: 20px;
         font-size: 12px;
       }
     }
