@@ -26,7 +26,7 @@ export default {
   name: 'Page404',
   computed: {
     message() {
-      return '网管说这个页面你不能进......'
+      return '没有这个页面的权限，你不能进......'
     }
   }
 }
