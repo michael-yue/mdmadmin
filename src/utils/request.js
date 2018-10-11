@@ -34,7 +34,7 @@ service.interceptors.response.use(
     if (res.code !== 20000) {
       Message({
         message: res.message,
-        type: 'error',
+        type: '网络连接过程中发生错误',
         duration: 5 * 1000
       })
 
