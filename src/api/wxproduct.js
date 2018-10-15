@@ -1,14 +1,8 @@
 import request from '@/utils/request'
 
-export function getWxBranch() {
-  return request({
-    url: '/api/listwxbranch',
-    method: 'get'
-  })
-}
 export function listProductByBranch(branchid) {
   return request({
-    url: '/api/listWxProductsByBranch',
+    url: '/api/listWxProductsByBranch?t=' + Date.now(),
     method: 'get',
     params: {
       branchid

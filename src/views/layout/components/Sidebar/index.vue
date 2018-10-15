@@ -1,17 +1,22 @@
 <template>
-  <el-scrollbar wrap-class="scrollbar-wrapper">
-    <el-menu
-      :show-timeout="200"
-      :default-active="$route.path"
-      :collapse="isCollapse"
-      mode="vertical"
-      background-color="#304156"
-      text-color="#bfcbd9"
-      active-text-color="#409EFF"
-    >
-      <sidebar-item v-for="route in permission_routers" :key="route.name" :item="route" :base-path="route.path"/>
-    </el-menu>
-  </el-scrollbar>
+  <div wrap-class="scrollbar-wrapper">
+    <div style="height:50px;background-color:white;padding:10px 40px;border-bottom:1px solid #e6e6e6">
+      <img src="@/assets/mdm_logo.png" width="100%" >
+    </div>
+    <el-scrollbar>
+      <el-menu
+        :show-timeout="200"
+        :default-active="$route.path"
+        :collapse="isCollapse"
+        mode="vertical"
+        background-color="#304156"
+        text-color="#bfcbd9"
+        active-text-color="#409EFF"
+      >
+        <sidebar-item v-for="route in permission_routers" :key="route.name" :item="route" :base-path="route.path"/>
+      </el-menu>
+    </el-scrollbar>
+  </div>
 </template>
 
 <script>
@@ -34,3 +39,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.el-scrollbar{height:100%}
+.el-scrollbar >>> .el-scrollbar__wrap{height:100%}
+.el-scrollbar >>> .el-scrollbar__view{height:100%}
+</style>

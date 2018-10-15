@@ -2,23 +2,26 @@
   <el-menu class="navbar" mode="horizontal">
     <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
     <breadcrumb />
-    <el-dropdown class="avatar-container" trigger="click">
-      <div class="avatar-wrapper">
-        <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
-        <div>{{ name }}</div>
-        <i class="el-icon-caret-bottom"/>
-      </div>
-      <el-dropdown-menu slot="dropdown" class="user-dropdown">
-        <router-link class="inlineBlock" to="/">
-          <el-dropdown-item>
-            首页
+    <div class="avatar-container">
+      <el-button size="mini" style="margin-right:10px" @click="toggle">全屏</el-button>
+      <el-dropdown trigger="click">
+        <div class="avatar-wrapper">
+          <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
+          <div>{{ name }}</div>
+          <i class="el-icon-caret-bottom"/>
+        </div>
+        <el-dropdown-menu slot="dropdown" class="user-dropdown">
+          <router-link class="inlineBlock" to="/">
+            <el-dropdown-item>
+              首页
+            </el-dropdown-item>
+          </router-link>
+          <el-dropdown-item divided>
+            <span style="display:block;" @click="logout">注销</span>
           </el-dropdown-item>
-        </router-link>
-        <el-dropdown-item divided>
-          <span style="display:block;" @click="logout">注销</span>
-        </el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </div>
   </el-menu>
 </template>
 
@@ -35,7 +38,8 @@ export default {
   },
   data() {
     return {
-      name: 'aa'
+      name: 'aa',
+      fullscreen: false
     }
   },
   computed: {
@@ -55,6 +59,29 @@ export default {
       this.$store.dispatch('LogOut').then(() => {
         location.reload() // 为了重新实例化vue-router对象 避免bug
       })
+    },
+    toggle: function() {
+      if (this.fullscreen) { // 退出全屏
+        var de1 = document
+        if (de1.exitFullscreen) {
+          de1.exitFullscreen()
+        } else if (de1.mozCancelFullScreen) {
+          de1.mozCancelFullScreen()
+        } else if (de1.webkitCancelFullScreen) {
+          de1.webkitCancelFullScreen()
+        }
+        this.fullscreen = false
+      } else { // 进入全屏
+        var de = document.documentElement
+        if (de.requestFullscreen) {
+          de.requestFullscreen()
+        } else if (de.mozRequestFullScreen) {
+          de.mozRequestFullScreen()
+        } else if (de.webkitRequestFullScreen) {
+          de.webkitRequestFullScreen()
+        }
+        this.fullscreen = true
+      }
     }
   }
 }
@@ -101,4 +128,3 @@ export default {
   }
 }
 </style>
-

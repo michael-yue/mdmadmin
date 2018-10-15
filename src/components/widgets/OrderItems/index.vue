@@ -1,11 +1,11 @@
 <template>
   <div class="itemcontent">
-    <div>child table </div>
-    <div v-for="item in itemData" :key="item.linenumber" class="items">
-      <div class="name">{{ item.productName }}</div>
-      <div class="qty">{{ item.qty }}</div>
-    </div>
-    <el-button type="danger" size="mini" @click="resend()">重发</el-button>
+    <ul class="items">
+      <li v-for="item in itemData" :key="item.linenumber" class="item">
+        <div class="prodname">{{ item.prodname }}</div>
+        <div class="qty">{{ item.qty }}</div>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -33,14 +33,16 @@ export default {
   method: {
     retriveItems: function() {
       console.log(this.orderId)
-    },
-    resend: function() {
-      console.log('send back')
     }
   }
 }
 </script>
 
 <style scope>
-div.items{display:flex}
+.itemcontent {width: 100%}
+ul.items{display:flex;flex-direction:column; list-style: none;padding:0}
+.item{display:flex;width: 100%;padding:0;margin:0 0 15px 0}
+.prodname {flex:1 1 200px}
+.qty {flex:1 1 auto}
+.resend{text-align: right}
 </style>

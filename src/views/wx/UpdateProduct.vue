@@ -2,12 +2,12 @@
   <div class="UpdateWxProduct">
     <div v-if="!roleBranch">
       <el-card style="margin:20px">
-        <SelectBranch @BranchChanged="branchChangeEvent" />
+        <SelectBranch typeclass="wx" @BranchChanged="branchChangeEvent" />
       </el-card>
     </div>
     <!-- <el-card style="margin:20px" class="maincontent"> -->
     <div style="margin:20px">
-      <ul class="prodlist">
+      <ul v-loading="loading" class="prodlist">
         <li v-for="item in products" :key="item.productid">
           <div class="namecontents">
             <div class="id textleft">{{ item.productid }}</div>
@@ -15,7 +15,6 @@
             <div class="buttons textright">
               <el-button v-show="item.onsale === '0'" type="danger" size="small" @click="updatetrue(item.productid)" >上架</el-button>
               <el-button v-show="item.onsale === '1'" type="success" size="small" @click="updatefalse(item.productid)" >下架</el-button>
-              <!-- <el-button v-show="item.onsale === '0'" type="danger" size="small" @click="deleteproduct(item.productid)" >删除</el-button> -->
             </div>
           </div>
         </li>
@@ -37,6 +36,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       roleBranch: false,
       selectedBranch: '',
       products: []
@@ -52,7 +52,6 @@ export default {
   },
   created: function() {
     if (store.getters.roles.includes('branch')) {
-      console.log(store.getters.branches)
       this.selectedBranch = store.getters.branches
       this.roleBranch = true
       // this.retriveData()
@@ -61,10 +60,11 @@ export default {
   methods: {
     retriveData: function() {
       var that = this
+      this.loading = true
       if (this.selectedBranch !== '') {
-        console.log('this.selectedBranch=' + this.selectedBranch)
         listProductByBranch(this.selectedBranch).then(response => {
           that.products = response.data
+          that.loading = false
         }).catch(error => {
           console.log(error)
         })
@@ -74,18 +74,17 @@ export default {
       this.selectedBranch = event.branchId
     },
     updatetrue: function(productid) {
-      console.log('update true')
       this.update(productid, 1)
     },
     updatefalse: function(productid) {
-      console.log('update false')
       this.update(productid, 0)
     },
     update: function(productid, flag) {
       var that = this
+      this.loading = true
       updateWxProductOnsale(that.selectedBranch, productid, flag).then(response => {
         that.retriveData()
-        console.log('updated')
+        that.loading = false
       }).catch(error => {
         console.log(error)
       })
@@ -93,11 +92,6 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.maincontent{
-  // height: calc(100vh - 162px)
-}
-</style>
 
 <style scoped>
 ul.prodlist{
@@ -115,7 +109,7 @@ ul.prodlist>li {
 ul.prodlist>li:first{
   border-top: solid 1px #ebebeb;
 }
-.namecontents{width:100%; display: inline-flex;padding: 5px 0px; justify-content: center;}
+.namecontents{width:100%; display: inline-flex;padding: 5px 0px; justify-content: center;align-items:center}
 .id{flex-grow: 1;flex-shrink: 1;flex-basis: 0; font-size:14px; color:#303133}
 .buttons{flex-grow: 3;flex-shrink: 1;flex-basis: 0; }
 .name{flex-grow: 4;flex-shrink: 1;flex-basis: 0; font-size:14px; color:#303133}

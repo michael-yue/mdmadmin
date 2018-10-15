@@ -1,26 +1,54 @@
 <template>
   <div class="orderlist">
-    <el-card style="margin:20px">
-      <SelectBranch @BranchChanged="branchChangeEvent"/>
-      <el-date-picker v-model="selectedDate" type="date" size="small" placeholder="选择日期" style="width:140px"/>
-      <el-button type="primary" size="small" style="margin-left:20px" @click="retrieveData" >查询</el-button>
-    </el-card>
-    <el-card style="margin:20px">
-      <el-table :data="orders" :class="{'tablestyle': true}" :cell-class-name="getCellClass" :expand-row-keys="expands" :row-key="getRowKeys" height="750" border size="small" @row-click="rowClick">
-        <el-table-column fixed prop="ordertime" label="时间" width="200" header-align="center" label-class-name	="header" align="left" />
-        <el-table-column fixed prop="tableid" label="桌号" width="200" header-align="center" align="right" />
-        <el-table-column fixed prop="amount" label="金额" width="200" header-align="center" align="right" />
-        <el-table-column type="expand" prop="children" label="ss">
-          <OrderItems :item_data="itemData"/>
-        </el-table-column>
-      </el-table>
-    </el-card>
+    <div ref="critheader" style="padding:10px 20px">
+      <el-card>
+        <SelectBranch typeclass="wx" @BranchChanged="branchChangeEvent"/>
+        <el-date-picker v-model="selectedDate" type="date" size="small" placeholder="选择日期" style="width:140px"/>
+        <el-button type="primary" plain size="small" style="margin-left:20px" @click="retrieveData" >查询</el-button>
+      </el-card>
+    </div>
+    <div :style="{height: myHeight}" style="padding:0 20px 10px 20px;">
+      <el-card>
+        <div style="width:100%;padding-bottom:10px;font-size:14px;color:#606266">笔数：{{ totalcount }} 合计金额：{{ totalamount }}</div>
+        <el-table
+          v-loading="loading"
+          ref="refTable"
+          :data="orders"
+          :class="{'tablestyle': true}"
+          :header-cell-style="tableheader"
+          :row-key="getRowKeys"
+          border
+          size="small"
+          height="100%"
+          @row-click="rowClick">
+          <el-table-column prop="ordertime" label="时间" width="" header-align="center" label-class-name	="header" align="left" />
+          <el-table-column prop="tableid" label="桌号" width="" header-align="center" align="right" />
+          <el-table-column prop="amount" label="金额" width="" header-align="center" align="right" />
+          <el-table-column prop="revflag" label="接收状态" width="" header-align="center" align="right">
+            <template slot-scope="props">
+              <div v-if="props.row.revflag=='1'">已收</div>
+              <div v-else>未收</div>
+            </template>
+          </el-table-column>
+          <el-table-column type="expand" prop="itemData" label="操作">
+            <template slot-scope="scope">
+              <div style="display:flex; flex-direction:column">
+                <OrderItems :itemData="scope.row.itemData" />
+                <div style="text-align:right">
+                  <el-button type="danger" size="mini" class="resend" @click="resend(scope.$index, scope.row)" >重发</el-button>
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-card>
+    </div>
   </div>
 </template>
 
 <script>
 import { parseTime } from '@/utils'
-import { listOrder } from '@/api/wxorder'
+import { listWxOrder, resendOrder } from '@/api/wxorder'
 import store from '@/store'
 import SelectBranch from '@/components/widgets/SelectBranch'
 import OrderItems from '@/components/widgets/OrderItems'
@@ -36,7 +64,31 @@ export default {
       selectedBranch: '',
       selectedDate: '',
       orders: [],
-      itemData: []
+      itemData: [],
+      myHeight: '',
+      loading: false
+    }
+  },
+  computed: {
+    totalcount: function() {
+      return this.orders.length
+    },
+    totalamount: function() {
+      let total = 0
+      for (var v of this.orders) {
+        total += v.amount
+      }
+      return total
+    }
+  },
+  mounted() {
+    const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight // 浏览器高度
+    const critheaderheight = this.$refs.critheader.offsetHeight
+    this.myHeight = (h - critheaderheight - 50) + 'px'
+    var that = this
+    window.onresize = function windowResize() {
+      const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight // 浏览器高度
+      that.myHeight = (h - critheaderheight - 50) + 'px'
     }
   },
   created: function() {
@@ -50,35 +102,43 @@ export default {
     },
     retrieveData: function() {
       const qdate = parseTime(this.selectedDate, '{y}-{m}-{d}')
-      listOrder(this.selectedBranch, qdate).then(response => {
+      this.loading = true
+      listWxOrder(this.selectedBranch, qdate).then(response => {
         this.orders = response.data
+        this.loading = false
       }).catch(error => {
         console.log(error)
       })
     },
     rowClick: function(row, event, column) {
-      // Array.prototype.remove = function(val) {
-      //   const index = this.indexOf(val)
-      //   if (index > -1) {
-      //     this.splice(index, 1)
-      //   }
-      // }
-
-      // if (this.expands.indexOf(row.id) < 0) {
-      //   this.expands.push(row.id)
-      // } else {
-      //   this.expands.remove(row.id)
-      // }
-      console.log(row.id)
+      this.$refs.refTable.toggleRowExpansion(row)
     },
     getRowKeys: function(row) {
-      return row.id
+      return row.billid
     },
-    resend: function(billid) {
-      console.log(billid)
+    resend: function(index, row) {
+      resendOrder(row.billid).then(response => {
+        // message
+        if (response.code === 20000) {
+          this.$message({
+            message: '重发成功',
+            type: 'success'
+          })
+        } else {
+          this.$message({
+            message: '重发错误，原因' + response.data,
+            type: 'danger'
+          })
+        }
+      }).catch(error => {
+        console.log(error)
+      })
     },
-    getCellClass: function(event) {
-      console.log('sss')
+    /*
+    * 以下设置class
+    */
+    tableheader({ row, index }) {
+      return 'background:#DCDFE6;'
     }
   }
 }
@@ -94,4 +154,7 @@ body .el-table th.gutter{
 }
 .tablestyle{margin:0px;}
 .header{background: #00f0f0}
+.el-card >>> .el-card__body {height:100%}
+.el-card{height:100%}
+/* .el-table >>>.el-table__expanded-cell{padding:10px 20px} */
 </style>

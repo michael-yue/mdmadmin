@@ -1,8 +1,8 @@
 <template>
   <div class="finprofilereportmaintain">
-    <div ref="critheader" style="padding:20px">
+    <div ref="critheader" style="padding:10px 20px">
       <el-card>
-        <SelectBranch @BranchChanged="branchChangedEvent" />
+        <SelectBranch typeclass="all" @BranchChanged="branchChangedEvent" />
         <el-date-picker v-model="selectedMonth" type="month" size="small" placeholder="选择月" style="width:120px"/>
         <el-button size="small" type="primary" style="margin-left:20px" @click="getData">确定</el-button>
         <el-button size="small" type="success" @click="saveData">保存</el-button>
@@ -22,7 +22,7 @@
           <el-table-column prop="planamount" label="计划" width="150" header-align="center" align="right">
             <template slot-scope="props">
               <div v-if="props.row.itemtype === '1'">
-                <el-input v-focus-next-on-enter v-model= "props.row.planamount" size="mini" @keyup.enter="nextTick" />
+                <el-input v-focus-next-on-enter :ref= "props.row.itemid" v-model= "props.row.planamount" size="mini" />
               </div>
               <div v-else class="labelamount">
                 {{ props.row.planamount }}
@@ -63,10 +63,11 @@ export default {
       bind: function(el, { value }, vnode) {
         el.addEventListener('keyup', (ev) => {
           if (ev.keyCode === 13) {
+            console.log('------------------------vnode-------------')
             console.log(vnode)
             console.log(value)
-            // const nextInput = vnode.context.$refs[value]
-            const nextInput = vnode.elm
+            const nextInput = vnode.context.$refs[value]
+            // const nextInput = vnode.elm
             console.log(nextInput)
             if (nextInput && typeof nextInput.focus === 'function') {
               nextInput.focus()
@@ -83,7 +84,8 @@ export default {
       branchId: '',
       monthdata: [],
       myHeight: '',
-      active: false
+      active: false,
+      loading: false
     }
   },
   watch: {
@@ -109,10 +111,6 @@ export default {
     }
   },
   created: function() {
-    // this.getData()
-    // var test1 = '1+((2-3)*5+10)/3'
-    // var result1 = calc(test1)
-    // console.log(test1 + ' = ' + result1)
   },
   methods: {
     formatplanpercent(row, column) {
@@ -152,10 +150,12 @@ export default {
     getData() {
       var that = this
       if (this.checkCritia()) {
+        this.loading = true
         const year = parseTime(this.selectedMonth, '{y}')
         const month = parseTime(this.selectedMonth, '{m}')
         getProfileMonthData(year, month, this.branchId).then(response => {
           that.monthdata = response.data
+          that.loading = false
         }).catch(error => {
           console.log(error)
         })
@@ -198,18 +198,17 @@ export default {
       }
       return style
     },
-    setitemfocused(item) {
-      // this.active = true
-      this.$nextTick(function() {
-        this.monthdata.forEach(function(item) {
-          item.active = false
-        })
-        item.active = true
-      })
-    },
+    // setitemfocused(item) {
+    //   // this.active = true
+    //   this.$nextTick(function() {
+    //     this.monthdata.forEach(function(item) {
+    //       item.active = false
+    //     })
+    //     item.active = true
+    //   })
+    // },
     // 计算
     computeAll(val) {
-      console.log('newval')
       // level 1, 计算计划金额中的level=2 and type = 2的，按顺序
       // console.log('--------------Level 2-----------------')
       for (let i = 0; i < val.length; i++) {
@@ -255,4 +254,3 @@ export default {
 .el-card >>> .el-card__body {height:100%}
 .el-card{height:100%}
 </style>
-

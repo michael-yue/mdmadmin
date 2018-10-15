@@ -13,11 +13,15 @@
 
 <script>
 import store from '@/store'
-import { getWxBranch } from '@/api/wxproduct'
+import { getWxBranch, getPOSBranch } from '@/api/branch'
 export default {
   name: 'SelectBranch',
   props: {
     branchId: {
+      default: '',
+      type: String
+    },
+    typeclass: {
       default: '',
       type: String
     }
@@ -47,11 +51,19 @@ export default {
     // 这里不对，权限
     retriveWxBranch: function() {
       var that = this
-      getWxBranch().then(response => {
-        that.branches = response.data
-      }).catch(error => {
-        console.log(error)
-      })
+      if (this.typeclass === 'wx') {
+        getWxBranch().then(response => {
+          that.branches = response.data
+        }).catch(error => {
+          console.log(error)
+        })
+      } else if (this.typeclass === 'all') {
+        getPOSBranch().then(response => {
+          that.branches = response.data
+        }).catch(error => {
+          console.log(error)
+        })
+      }
     }
   }
 }
