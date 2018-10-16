@@ -12,3 +12,9 @@ export function getWxBranch() {
     method: 'get'
   })
 }
+export function getMtBranch() {
+  return request({
+    url: '/api/listmtbranch?t=' + Date.now(),
+    method: 'get'
+  })
+}

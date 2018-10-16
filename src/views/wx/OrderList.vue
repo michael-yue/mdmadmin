@@ -33,7 +33,7 @@
           <el-table-column type="expand" prop="itemData" label="操作">
             <template slot-scope="scope">
               <div style="display:flex; flex-direction:column">
-                <OrderItems :itemData="scope.row.itemData" />
+                <OrderItems :item_data="scope.row.itemData" />
                 <div style="text-align:right">
                   <el-button type="danger" size="mini" class="resend" @click="resend(scope.$index, scope.row)" >重发</el-button>
                 </div>

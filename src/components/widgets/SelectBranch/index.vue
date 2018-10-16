@@ -13,7 +13,7 @@
 
 <script>
 import store from '@/store'
-import { getWxBranch, getPOSBranch } from '@/api/branch'
+import { getWxBranch, getMtBranch, getPOSBranch } from '@/api/branch'
 export default {
   name: 'SelectBranch',
   props: {
@@ -53,6 +53,12 @@ export default {
       var that = this
       if (this.typeclass === 'wx') {
         getWxBranch().then(response => {
+          that.branches = response.data
+        }).catch(error => {
+          console.log(error)
+        })
+      } else if (this.typeclass === 'mt') {
+        getMtBranch().then(response => {
           that.branches = response.data
         }).catch(error => {
           console.log(error)
