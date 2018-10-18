@@ -1,31 +1,45 @@
 <template>
-  <div class="UpdateWxProduct">
-    <div v-show="!roleBranch" ref="critheader" style="padding:10px 20px ">
+  <div class="UpdateMtProduct">
+    <div v-show="!roleBranch" ref="critheader" style="padding:10px 20px">
       <el-card>
-        <SelectBranch typeclass="wx" @BranchChanged="branchChangeEvent" />
+        <SelectBranch typeclass="mt" @BranchChanged="branchChangeEvent" />
+        <el-button type="primary" size="small" @click="mapdish">映射美团产品</el-button>
       </el-card>
     </div>
-    <!-- <el-card style="margin:20px" class="maincontent"> -->
     <div :style="{height: myHeight}" style="padding:10px 20px">
       <el-card>
         <el-table v-loading="loading" :data="products" size="small" height="100%">
-          <el-table-column prop="productid" width="100" label="编码"/>
-          <el-table-column prop="name" width="300" label="名称"/>
-          <el-table-column prop="onsale" width="100" label="操作">
+          <el-table-column prop="prodid" label="收银系统产品代码" width="150"/>
+          <el-table-column prop="mtdishname" label="名称"/>
+          <el-table-column prop="mtdishid" label="美团代码"/>
+          <el-table-column label="操作" >
             <template slot-scope="props">
-              <el-button v-if="props.row.onsale === '0'" type="danger" size="small" @click="updatetrue(props.row.productid)" >上架</el-button>
-              <el-button v-if="props.row.onsale === '1'" type="success" size="small" @click="updatefalse(props.row.productid)" >下架</el-button>
+              <el-button type="success" size="small" @click="updatecode(props.$index, props.row)">修改代码</el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-card>
     </div>
+    <el-dialog :visible.sync="dialogFormVisible" title="美图菜品映射">
+      <el-form :model="form">
+        <el-form-item :label-width="formLabelWidth" label="收银系统菜品代码">
+          <el-input v-model="form.prodid" auto-complete="off" />
+        </el-form-item>
+        <el-form-item :label-width="formLabelWidth" label="菜品名称" >
+          <el-input v-model="form.mtdishname" readonly />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="update">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import store from '@/store'
-import { listProductByBranch, updateWxProductOnsale } from '@/api/wxproduct'
+import { listMtProductByBranch, mapMtProducts } from '@/api/wxproduct'
 import SelectBranch from '@/components/widgets/SelectBranch'
 
 export default {
@@ -39,7 +53,14 @@ export default {
       roleBranch: false,
       selectedBranch: '',
       products: [],
-      myHeight: ''
+      currentIndex: '',
+      myHeight: '',
+      dialogFormVisible: false,
+      form: {
+        prodid: '',
+        mtdishname: ''
+      },
+      formLabelWidth: '150px'
     }
   },
   watch: {
@@ -53,7 +74,6 @@ export default {
   mounted() {
     const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight // 浏览器高度
     const critheaderheight = this.$refs.critheader.offsetHeight
-    console.log(critheaderheight)
     this.myHeight = (h - critheaderheight - 50) + 'px'
     var that = this
     window.onresize = function windowResize() {
@@ -65,7 +85,6 @@ export default {
     if (store.getters.roles.includes('branch')) {
       this.selectedBranch = store.getters.branches
       this.roleBranch = true
-      // this.retriveData()
     }
   },
   methods: {
@@ -73,8 +92,9 @@ export default {
       var that = this
       this.loading = true
       if (this.selectedBranch !== '') {
-        listProductByBranch(this.selectedBranch).then(response => {
+        listMtProductByBranch(this.selectedBranch).then(response => {
           that.products = response.data
+          console.log(this.products)
           that.loading = false
         }).catch(error => {
           console.log(error)
@@ -84,18 +104,23 @@ export default {
     branchChangeEvent: function(event) {
       this.selectedBranch = event.branchId
     },
-    updatetrue: function(productid) {
-      this.update(productid, 1)
+    updatecode: function(index, row) {
+      this.form = this.products[index]
+      this.currentIndex = index
+      this.dialogFormVisible = true
     },
-    updatefalse: function(productid) {
-      this.update(productid, 0)
-    },
-    update: function(productid, flag) {
-      var that = this
+    update: function() {
+      // var that = this
       this.loading = true
-      updateWxProductOnsale(that.selectedBranch, productid, flag).then(response => {
-        that.retriveData()
-        that.loading = false
+      this.products.push(this.form)
+      this.dialogFormVisible = false
+      this.loading = false
+    },
+    mapdish: function() {
+      console.log(this.selectedBranch)
+      console.log(this.products)
+      mapMtProductsByBranch(this.selectedBranch, this.products).then(response => {
+        console.log('success')
       }).catch(error => {
         console.log(error)
       })

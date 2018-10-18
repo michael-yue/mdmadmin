@@ -30,14 +30,13 @@ export function listMtProductByBranch(branchid) {
     }
   })
 }
-export function updateMtProductOnsale(branchid, productid, onsaleflag) {
+export function mapMtProductsByBranch(branchid, products) {
   return request({
-    url: '/api/updateMtProductOnsale',
+    url: '/api/mapMtProductsByBranch',
     method: 'post',
     data: {
       branchid,
-      productid,
-      onsaleflag
+      products
     }
   })
 }

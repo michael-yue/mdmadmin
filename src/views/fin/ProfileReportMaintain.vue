@@ -22,7 +22,7 @@
           <el-table-column prop="planamount" label="计划" width="150" header-align="center" align="right">
             <template slot-scope="props">
               <div v-if="props.row.itemtype === '1'">
-                <el-input v-focus-next-on-enter :ref= "props.row.itemid" v-model= "props.row.planamount" size="mini" />
+                <el-input v-focus-next-on-enter v-model= "props.row.planamount" :ref= "props.row.itemid" size="mini" @focus="focus($event)"/>
               </div>
               <div v-else class="labelamount">
                 {{ props.row.planamount }}
@@ -33,7 +33,7 @@
           <el-table-column prop="actualamount" label="实际" width="150" header-align="center" align="right">
             <template slot-scope="props">
               <div v-if="props.row.itemtype === '1'">
-                <el-input v-model= "props.row.actualamount" size="mini" />
+                <el-input v-model= "props.row.actualamount" :ref= "props.row.itemid" size="mini" @focus="focus($event)" @keyup.enter="(e)=>doneEdit('a'+props.row.itemid)"/>
               </div>
               <div v-else class="labelamount">
                 {{ props.row.actualamount }}
@@ -198,16 +198,15 @@ export default {
       }
       return style
     },
-    // setitemfocused(item) {
-    //   // this.active = true
-    //   this.$nextTick(function() {
-    //     this.monthdata.forEach(function(item) {
-    //       item.active = false
-    //     })
-    //     item.active = true
-    //   })
-    // },
-    // 计算
+    focus: function(event) {
+      console.log(event)
+      event.currentTarget.select()
+    },
+    doneEdit: function(refid) {
+      console.log('doneEdit')
+      const dom = this.$refs[refid][0]
+      dom.parentNode.nextElementSibling && dom.parentNode.nextElementSibling.childNodes[3].focus()
+    },
     computeAll(val) {
       // level 1, 计算计划金额中的level=2 and type = 2的，按顺序
       // console.log('--------------Level 2-----------------')

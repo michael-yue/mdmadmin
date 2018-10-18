@@ -22,7 +22,7 @@ export function resendOrder(billid) {
 
 export function listMeituanOrder(branchid, transdate) {
   return request({
-    url: '/api/listMeituanOrder',
+    url: '/api/listMtOrder',
     method: 'get',
     params: {
       branchid,

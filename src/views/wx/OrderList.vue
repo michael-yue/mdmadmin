@@ -8,40 +8,38 @@
       </el-card>
     </div>
     <div :style="{height: myHeight}" style="padding:0 20px 10px 20px;">
-      <el-card>
-        <div style="width:100%;padding-bottom:10px;font-size:14px;color:#606266">笔数：{{ totalcount }} 合计金额：{{ totalamount }}</div>
-        <el-table
-          v-loading="loading"
-          ref="refTable"
-          :data="orders"
-          :class="{'tablestyle': true}"
-          :header-cell-style="tableheader"
-          :row-key="getRowKeys"
-          border
-          size="small"
-          height="100%"
-          @row-click="rowClick">
-          <el-table-column prop="ordertime" label="时间" width="" header-align="center" label-class-name	="header" align="left" />
-          <el-table-column prop="tableid" label="桌号" width="" header-align="center" align="right" />
-          <el-table-column prop="amount" label="金额" width="" header-align="center" align="right" />
-          <el-table-column prop="revflag" label="接收状态" width="" header-align="center" align="right">
-            <template slot-scope="props">
-              <div v-if="props.row.revflag=='1'">已收</div>
-              <div v-else>未收</div>
-            </template>
-          </el-table-column>
-          <el-table-column type="expand" prop="itemData" label="操作">
-            <template slot-scope="scope">
-              <div style="display:flex; flex-direction:column">
-                <OrderItems :item_data="scope.row.itemData" />
-                <div style="text-align:right">
-                  <el-button type="danger" size="mini" class="resend" @click="resend(scope.$index, scope.row)" >重发</el-button>
-                </div>
+      <div ref="statdiv" class="stat">笔数：{{ totalcount }} 合计金额：{{ totalamount }}</div>
+      <el-table
+        v-loading="loading"
+        ref="refTable"
+        :data="orders"
+        :class="{'tablestyle': true}"
+        :header-cell-style="tableheader"
+        :row-key="getRowKeys"
+        border
+        size="small"
+        height="100%"
+        @row-click="rowClick">
+        <el-table-column prop="ordertime" label="时间" width="" header-align="center" label-class-name	="header" align="left" />
+        <el-table-column prop="tableid" label="桌号" width="" header-align="center" align="right" />
+        <el-table-column prop="amount" label="金额" width="" header-align="center" align="right" />
+        <el-table-column prop="revflag" label="接收状态" width="" header-align="center" align="right">
+          <template slot-scope="props">
+            <div v-if="props.row.revflag=='1'">已收</div>
+            <div v-else>未收</div>
+          </template>
+        </el-table-column>
+        <el-table-column type="expand" prop="itemData" label="操作">
+          <template slot-scope="scope">
+            <div style="display:flex; flex-direction:column">
+              <OrderItems :item_data="scope.row.itemData" />
+              <div style="text-align:right">
+                <el-button type="danger" size="mini" class="resend" @click="resend(scope.$index, scope.row)" >重发</el-button>
               </div>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-card>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
   </div>
 </template>
@@ -84,11 +82,12 @@ export default {
   mounted() {
     const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight // 浏览器高度
     const critheaderheight = this.$refs.critheader.offsetHeight
-    this.myHeight = (h - critheaderheight - 50) + 'px'
+    const statHeight = this.$refs.statdiv.offsetHeight
+    this.myHeight = (h - critheaderheight - statHeight - 50) + 'px'
     var that = this
     window.onresize = function windowResize() {
       const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight // 浏览器高度
-      that.myHeight = (h - critheaderheight - 50) + 'px'
+      that.myHeight = (h - critheaderheight - statHeight - 50) + 'px'
     }
   },
   created: function() {
@@ -145,8 +144,6 @@ export default {
 </script>
 
 <style scoped>
-ul {list-style: none}
-ul>li{display:flex; font-size:14px; color:#301333; justify-content: flex-start;}
 .time, .amount, .tableid, .buttons{flex: 1 1 auto}
 
 body .el-table th.gutter{
@@ -154,6 +151,7 @@ body .el-table th.gutter{
 }
 .tablestyle{margin:0px;}
 .header{background: #00f0f0}
+.stat {width:100%;padding-bottom:10px;font-size:14px;color:#606266}
 .el-card >>> .el-card__body {height:100%}
 .el-card{height:100%}
 /* .el-table >>>.el-table__expanded-cell{padding:10px 20px} */

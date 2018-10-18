@@ -8,7 +8,7 @@
             <div class="tableid textleft">{{ item.tableid }}</div>
             <div class="amount textleft">{{ item.amount }}</div>
             <div class="buttons textright">
-              <el-button v-show="item.onsale === '0'" type="danger" size="small" @click="updatetrue(item.productid)" >重发</el-button>
+              <el-button v-show="item.onsale === '0'" type="danger" size="small">重发</el-button>
             </div>
           </div>
         </li>
@@ -20,7 +20,7 @@
 
 <script>
 import { listOrder } from '@/api/wxorder'
-import { getWxBranch } from '@/api/wxproduct'
+import { getWxBranch } from '@/api/branch'
 
 export default {
   name: 'OrderList',
@@ -39,13 +39,6 @@ export default {
       var that = this
       getWxBranch().then(response => {
         that.branches = response.data
-      }).catch(error => {
-        console.log(error)
-      })
-    },
-    retrieveData: function() {
-      listOrder().then(response => {
-        this.orders = response.data
       }).catch(error => {
         console.log(error)
       })

@@ -1,12 +1,20 @@
 // Add 
+ul{list-style: none}
+
 .el-table td.indent1{ text-indent:24px}
 .el-table td.indent2{ text-indent:48px}
 .el-table td.indent3{ text-indent:72px}
 
-body .el-table th.gutter{
-    display: table-cell!important;
-}
+.el-table td.level0style {background-color: #E4E7ED; }
+.el-table td.level1style {background-color: #EBEEF5; }
+
+// .el-card >>> .el-card__body {height:100%}
+// .el-card {height:100%}
+
+// body .el-table th.gutter{
+//     display: table-cell!important;
+// }
  
-body .el-table colgroup.gutter{
-    display: table-cell!important;
-}
+// body .el-table colgroup.gutter{
+//     display: table-cell!important;
+// }

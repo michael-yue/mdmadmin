@@ -12,7 +12,7 @@
       </el-card>
     </div>
     <div :style="{height: myHeight}" style="padding:0 20px 10px 20px;">
-      <div class="showcriteria" style="display:flex;justify-content:flex-end;padding:10px">
+      <div ref="showcriteria" class="showcriteria" style="display:flex;justify-content:flex-end;padding:10px">
         <div>
           <el-checkbox-group v-model="showcols" :min="1" :max="shows.length" size="small" >
             <el-checkbox v-for="show in shows" :label="show.key" :key="show.key" border>{{ show.name }}</el-checkbox>
@@ -97,7 +97,8 @@ export default {
     // set content height
     const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight // 浏览器高度
     const critheaderheight = this.$refs.critheader.offsetHeight
-    this.myHeight = (h - critheaderheight - 102) + 'px'
+    const showcriteriaheight = this.$refs.showcriteria.offsetHeight
+    this.myHeight = (h - critheaderheight - showcriteriaheight - 50) + 'px'
     var that = this
     window.onresize = function windowResize() {
       const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight // 浏览器高度
@@ -177,8 +178,35 @@ export default {
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]))
     },
+    checkCritia: function() {
+      if (!this.selectedBranch) {
+        this.$message({
+          message: '请先选择门店',
+          type: 'warning'
+        })
+        return false
+      }
+      if (!this.selectedMonthStart) {
+        this.$message({
+          message: '请先选择开始月份',
+          type: 'warning'
+        })
+        return false
+      }
+      if (!this.selectedMonthEnd) {
+        this.$message({
+          message: '请先选择结束月份',
+          type: 'warning'
+        })
+        return false
+      }
+      return true
+    },
     getData: function() {
       // check input
+      if (!this.checkCritia()) {
+        return
+      }
       const fromyear = parseTime(this.selectedMonthStart, '{y}')
       const frommonth = parseTime(this.selectedMonthStart, '{m}')
       const toyear = parseTime(this.selectedMonthEnd, '{y}')

@@ -1,6 +1,6 @@
 <template>
   <div wrap-class="scrollbar-wrapper">
-    <div style="height:50px;background-color:white;padding:10px 40px;border-bottom:1px solid #e6e6e6">
+    <div style="height:50px;background-color:rgb(48, 65, 86);padding:10px 40px;">
       <img src="@/assets/mdm_logo.png" width="100%" >
     </div>
     <el-scrollbar>

@@ -1,7 +1,7 @@
 <template>
   <div class="itemcontent">
     <ul class="items">
-      <li v-for="item in itemData" :key="item.linenumber" class="item">
+      <li v-for="item in item_data" :key="item.linenumber" class="item">
         <div class="prodname">{{ item.prodname }}</div>
         <div class="qty">{{ item.qty }}</div>
       </li>
@@ -14,7 +14,7 @@
 export default {
   name: 'OrderItems',
   props: {
-    itemData: {
+    item_data: {
       default: function() {
         return []
       },
