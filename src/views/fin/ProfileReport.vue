@@ -15,7 +15,7 @@
       <div ref="showcriteria" class="showcriteria" style="display:flex;justify-content:flex-end;padding:10px">
         <div>
           <el-checkbox-group v-model="showcols" :min="1" :max="shows.length" size="small" >
-            <el-checkbox v-for="show in shows" :label="show.key" :key="show.key" border>{{ show.name }}</el-checkbox>
+            <el-checkbox v-for="show in shows" :label="show.key" :key="show.key" :disabled="show.disabled" border>{{ show.name }}</el-checkbox>
           </el-checkbox-group>
         </div>
         <div style="margin-left:20px">
@@ -63,11 +63,6 @@ import { parseTime } from '@/utils'
 import FileSaver from 'file-saver'
 import XLSX from 'xlsx'
 
-const showOptions = [{ 'key': 'plan', 'name': '计划' },
-  { 'key': 'actual', 'name': '实际' }, { 'key': 'diff', 'name': '差异' },
-  { 'key': 'lastyear', 'name': '去年同期' }, { 'key': 'lastyeardiff', 'name': '去年差异' },
-  { 'key': 'thisyearsummary', 'name': '今年累计' }, { 'key': 'lastyearsummary', 'name': '去年累计' }]
-
 export default {
   name: 'FinProfileReport',
   components: {
@@ -83,11 +78,49 @@ export default {
       tableData: [],
       tableConfig: [],
       checkboxGroup: [],
-      shows: showOptions,
+      shows: [
+        { 'key': 'plan', 'name': '计划', 'disabled': false },
+        { 'key': 'actual', 'name': '实际', 'disabled': false },
+        { 'key': 'diff', 'name': '差异', 'disabled': false },
+        { 'key': 'lastyear', 'name': '去年同期', 'disabled': false },
+        { 'key': 'lastyeardiff', 'name': '去年差异', 'disabled': false },
+        { 'key': 'thisyearsummary', 'name': '今年累计', 'disabled': false },
+        { 'key': 'lastyearsummary', 'name': '去年累计', 'disabled': false }],
       firstshow: true,
       showcols: ['plan', 'actual', 'diff', 'lastyear', 'lastyeardiff', 'thisyearsummary', 'lastyearsummary'],
       loading: false,
       downloading: false
+    }
+  },
+  watch: {
+    reporttype: function(val, oldval) {
+      // 这里可以优化，减少一个，只留shows
+      if (val !== oldval) {
+        this.tableData = []
+      }
+      if (val) {
+        this.showcols = this.showcols.filter(t => t !== 'thisyearsummary')
+        this.showcols = this.showcols.filter(t => t !== 'lastyearsummary')
+        var a = this.shows.findIndex((value, index, arr) => {
+          return value.key === 'thisyearsummary'
+        })
+        this.shows[a].disabled = true
+        a = this.shows.findIndex((value, index, arr) => {
+          return value.key === 'lastyearsummary'
+        })
+        this.shows[a].disabled = true
+      } else {
+        this.showcols.push('thisyearsummary')
+        this.showcols.push('lastyearsummary')
+        var a = this.shows.findIndex((value, index, arr) => {
+          return value.key === 'thisyearsummary'
+        })
+        this.shows[a].disabled = false
+        a = this.shows.findIndex((value, index, arr) => {
+          return value.key === 'lastyearsummary'
+        })
+        this.shows[a].disabled = false
+      }
     }
   },
   created: function() {

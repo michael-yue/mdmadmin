@@ -43,7 +43,7 @@ export const asyncRouterMap = [
     path: '/finreport',
     component: Layout,
     name: 'finreport',
-    meta: { title: '利润报表', icon: 'example', roles: ['finance'] },
+    meta: { title: '利润报表', icon: 'table', roles: ['finance'] },
     children: [
       {
         path: 'profilereport',
@@ -55,13 +55,13 @@ export const asyncRouterMap = [
         path: 'ProfileReportMaintain',
         name: 'ProfileReportMaintain',
         component: () => import('@/views/fin/ProfileReportMaintain'),
-        meta: { title: '利润表维护', icon: 'tree', roles: ['finance'] }
+        meta: { title: '利润表维护', icon: 'form', roles: ['finance'] }
       },
       {
         path: 'ProfileReportSetup',
         name: 'ProfileReportSetup',
         component: () => import('@/views/fin/ProfileReportSetup'),
-        meta: { title: '利润表项目维护', icon: 'tree', roles: ['finance'] }
+        meta: { title: '利润表项目维护', icon: 'example', roles: ['finance'] }
       }
     ]
   },

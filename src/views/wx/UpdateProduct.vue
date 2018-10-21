@@ -5,19 +5,24 @@
         <SelectBranch typeclass="wx" @BranchChanged="branchChangeEvent" />
       </el-card>
     </div>
-    <!-- <el-card style="margin:20px" class="maincontent"> -->
     <div :style="{height: myHeight}" style="padding:10px 20px">
       <el-card>
-        <el-table v-loading="loading" :data="products" size="small" height="100%">
-          <el-table-column prop="productid" width="100" label="编码"/>
-          <el-table-column prop="name" width="300" label="名称"/>
-          <el-table-column prop="onsale" width="100" label="操作">
-            <template slot-scope="props">
-              <el-button v-if="props.row.onsale === '0'" type="danger" size="small" @click="updatetrue(props.row.productid)" >上架</el-button>
-              <el-button v-if="props.row.onsale === '1'" type="success" size="small" @click="updatefalse(props.row.productid)" >下架</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+        <div v-loading="loading" style="height:100%;overflow:auto">
+          <ul>
+            <li v-for="item in products" :key="item.prodtypeid">
+              <h4>{{ item.prodtypename }}</h4>
+              <ul style="display:flex;margin:15px;flex-wrap:wrap;font-size:13px">
+                <li v-for="p in item.products" :key="p.productid" style="flex:0 1 auto;margin:10px">
+                  <div :class="{'product_content_sale':p.onsale==='1', 'product_content':p.onsale==='0'}" @click="update(p.productid, p.onsale)">
+                    <div style="padding-bottom:10px">{{ p.productid }}</div>
+                    <div style="padding-bottom:10px"> {{ p.name }}</div>
+                    <div style="width:100%;text-align:right"> ￥{{ p.price }}</div>
+                  </div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
       </el-card>
     </div>
   </div>
@@ -84,15 +89,20 @@ export default {
     branchChangeEvent: function(event) {
       this.selectedBranch = event.branchId
     },
-    updatetrue: function(productid) {
-      this.update(productid, 1)
-    },
-    updatefalse: function(productid) {
-      this.update(productid, 0)
-    },
+    // updatetrue: function(productid) {
+    //   this.update(productid, 1)
+    // },
+    // updatefalse: function(productid) {
+    //   this.update(productid, 0)
+    // },
     update: function(productid, flag) {
       var that = this
       this.loading = true
+      if (flag === '1') {
+        flag = '0'
+      } else {
+        flag = '1'
+      }
       updateWxProductOnsale(that.selectedBranch, productid, flag).then(response => {
         that.retriveData()
         that.loading = false
@@ -114,4 +124,6 @@ export default {
 .header{width:100%;padding:5px;margin:0;display: flex; background: #f2f2f2}
 .el-card >>> .el-card__body {height:100%}
 .el-card{height:100%}
+.product_content_sale{width:160px;height:80px; border:1px solid #eee;padding:10px 5px; background: lightgreen;cursor:-webkit-grab}
+.product_content{width:160px;height:80px; border:1px solid #eee;padding:10px 5px; background: lightblue;cursor:-webkit-grab}
 </style>

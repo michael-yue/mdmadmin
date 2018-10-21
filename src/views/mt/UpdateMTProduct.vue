@@ -12,11 +12,11 @@
           <el-table-column prop="prodid" label="收银系统产品代码" width="150"/>
           <el-table-column prop="mtdishname" label="名称"/>
           <el-table-column prop="mtdishid" label="美团代码"/>
-          <el-table-column label="操作" >
+          <!-- <el-table-column label="操作" >
             <template slot-scope="props">
               <el-button type="success" size="small" @click="updatecode(props.$index, props.row)">修改代码</el-button>
             </template>
-          </el-table-column>
+          </el-table-column> -->
         </el-table>
       </el-card>
     </div>
