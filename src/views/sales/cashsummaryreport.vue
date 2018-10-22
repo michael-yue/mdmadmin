@@ -3,8 +3,6 @@
     <div ref="critheader" style="padding:10px 20px">
       <el-card>
         <SelectBranch typeclass="all" @BranchChanged="branchChangedEvent"/>
-        <!-- <el-button size="small" plain>今日</el-button>
-        <el-button size="small" plain>昨日</el-button> -->
         <el-radio-group v-model="reporttype" size="small">
           <el-radio-button label="昨日" />
           <el-radio-button label="本期" />
@@ -126,8 +124,6 @@ export default {
 
 <style scoped>
 .orderlist{display: flex; flex-direction: column;flex-flow: column;align-items: stretch;height:100%}
-.el-card >>> .el-card__body {height:100%}
-.el-card{height:100%}
 .ordercontents {display:flex; padding:5px; font-size:14px}
 .billtype {flex:1 1 200px}
 .amount{flex:1 1 200px; text-align: right}

@@ -100,6 +100,21 @@ export default {
       this.selectedBranch = event.branchId
     },
     retrieveData: function() {
+      if (this.selectedBranch === '') {
+        this.$message({
+          message: '请先选择门店',
+          type: 'warning'
+        })
+        return
+      }
+      console.log(this.selectedDate)
+      if (this.selectedDate === '') {
+        this.$message({
+          message: '请先选择日期',
+          type: 'warning'
+        })
+        return
+      }
       const qdate = parseTime(this.selectedDate, '{y}-{m}-{d}')
       this.loading = true
       listWxOrder(this.selectedBranch, qdate).then(response => {
@@ -152,7 +167,4 @@ body .el-table th.gutter{
 .tablestyle{margin:0px;}
 .header{background: #00f0f0}
 .stat {width:100%;padding-bottom:10px;font-size:14px;color:#606266}
-.el-card >>> .el-card__body {height:100%}
-.el-card{height:100%}
-/* .el-table >>>.el-table__expanded-cell{padding:10px 20px} */
 </style>

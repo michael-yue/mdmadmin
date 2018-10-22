@@ -61,7 +61,7 @@ export const asyncRouterMap = [
         path: 'ProfileReportSetup',
         name: 'ProfileReportSetup',
         component: () => import('@/views/fin/ProfileReportSetup'),
-        meta: { title: '利润表项目维护', icon: 'example', roles: ['finance'] }
+        meta: { title: '利润表项目维护', icon: 'form', roles: ['finance'] }
       }
     ]
   },
@@ -70,13 +70,13 @@ export const asyncRouterMap = [
     path: '/sales',
     component: Layout,
     name: 'sales',
-    meta: { title: '营运报表', icon: 'example', roles: ['admin'] },
+    meta: { title: '营运报表', icon: 'example', roles: ['finance1', 'marketing1', ] },
     children: [
       {
         path: 'cashreport',
         name: 'cashreport',
         component: () => import('@/views/sales/cashreport'),
-        meta: { title: '营业收入报表', icon: 'table', roles: ['admin'] }
+        meta: { title: '营业收入报表', icon: 'table', roles: ['finance1', 'marketing1'] }
       },
       {
         path: 'cashperiodreport',
@@ -89,9 +89,22 @@ export const asyncRouterMap = [
         name: 'salesreport',
         component: () => import('@/views/sales/salesreport'),
         meta: { title: '产品销售报表', icon: 'tree', roles: ['admin'] }
+      },
+      {
+        path: 'cashsummaryreport',
+        name: 'cashsummaryreport',
+        component: () => import('@/views/sales/cashsummaryreport'),
+        meta: { title: '营业汇总报表', icon: 'table', roles: ['admin'] }
+      },
+      {
+        path: 'salessummaryreport',
+        name: 'salessummaryreport',
+        component: () => import('@/views/sales/productsalesummaryreport'),
+        meta: { title: '产品销售汇总报表', icon: 'table', roles: ['admin'] }
       }
     ]
   },
+
   {
     path: '/wx',
     component: Layout,

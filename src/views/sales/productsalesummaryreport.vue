@@ -3,8 +3,6 @@
     <div ref="critheader" style="padding:10px 20px">
       <el-card>
         <SelectBranch typeclass="all" @BranchChanged="branchChangedEvent"/>
-        <!-- <el-button size="small" plain>今日</el-button>
-        <el-button size="small" plain>昨日</el-button> -->
         <el-radio-group v-model="reporttype" size="small">
           <el-radio-button label="昨日" />
           <el-radio-button label="本期" />

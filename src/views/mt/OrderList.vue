@@ -20,10 +20,10 @@
         size="small"
         height="100%"
         @row-click="rowClick">
-        <el-table-column prop="tableid" label="美团单号" width="100" header-align="center" align="right" />
-        <el-table-column prop="ordertime" label="时间" width="100" header-align="center" label-class-name	="header" align="left" />
-        <el-table-column prop="amount" label="金额" width="100" header-align="center" align="right" />
-        <el-table-column prop="revflag" label="接收状态" width="100" header-align="center" align="right">
+        <el-table-column prop="tableid" label="美团单号" width="" header-align="center" align="right" />
+        <el-table-column prop="ordertime" label="时间" width="" header-align="center" label-class-name	="header" align="left" />
+        <el-table-column prop="amount" label="金额" width="" header-align="center" align="right" />
+        <el-table-column prop="revflag" label="接收状态" width="" header-align="center" align="right">
           <template slot-scope="props">
             <div v-if="props.row.revflag=='1'">已收</div>
             <div v-else>未收</div>

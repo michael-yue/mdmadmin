@@ -39,7 +39,7 @@
 
 <script>
 import store from '@/store'
-import { listMtProductByBranch, mapMtProducts } from '@/api/wxproduct'
+import { listMtProductByBranch, mapMtProductsByBranch } from '@/api/wxproduct'
 import SelectBranch from '@/components/widgets/SelectBranch'
 
 export default {
@@ -58,14 +58,14 @@ export default {
       dialogFormVisible: false,
       form: {
         prodid: '',
-        mtdishname: ''
+        mtdishname: '',
+        mtdishid: ''
       },
       formLabelWidth: '150px'
     }
   },
   watch: {
     selectedBranch(val, oldval) {
-      // console.log(val, oldval)
       if (val !== 0) {
         this.retriveData()
       }
@@ -94,7 +94,6 @@ export default {
       if (this.selectedBranch !== '') {
         listMtProductByBranch(this.selectedBranch).then(response => {
           that.products = response.data
-          console.log(this.products)
           that.loading = false
         }).catch(error => {
           console.log(error)
@@ -105,22 +104,34 @@ export default {
       this.selectedBranch = event.branchId
     },
     updatecode: function(index, row) {
-      this.form = this.products[index]
+      this.form.prodid = this.products[index].prodid
+      this.form.mtdishname = this.products[index].mtdishname
+      this.form.mtdishid = this.products[index].mtdishid
       this.currentIndex = index
       this.dialogFormVisible = true
     },
     update: function() {
-      // var that = this
       this.loading = true
-      this.products.push(this.form)
+      var ret1 = this.products.find((value, index, arr) => {
+        return value.mtdishid === this.form.mtdishid
+      })
+      ret1.prodid = this.form.prodid
       this.dialogFormVisible = false
       this.loading = false
     },
     mapdish: function() {
-      console.log(this.selectedBranch)
-      console.log(this.products)
       mapMtProductsByBranch(this.selectedBranch, this.products).then(response => {
-        console.log('success')
+        if (response.code === 20000) {
+          this.$message({
+            message: '美团产品映射成功!',
+            type: 'success'
+          })
+        } else {
+          this.$message({
+            message: '美团产品映射失败，原因：' + response.message,
+            type: 'warning'
+          })
+        }
       }).catch(error => {
         console.log(error)
       })

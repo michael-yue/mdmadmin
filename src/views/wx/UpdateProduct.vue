@@ -75,6 +75,9 @@ export default {
   },
   methods: {
     retriveData: function() {
+      if (this.selectedBranch === '') {
+        return
+      }
       var that = this
       this.loading = true
       if (this.selectedBranch !== '') {
@@ -89,13 +92,10 @@ export default {
     branchChangeEvent: function(event) {
       this.selectedBranch = event.branchId
     },
-    // updatetrue: function(productid) {
-    //   this.update(productid, 1)
-    // },
-    // updatefalse: function(productid) {
-    //   this.update(productid, 0)
-    // },
     update: function(productid, flag) {
+      if (this.selectedBranch === '') {
+        return
+      }
       var that = this
       this.loading = true
       if (flag === '1') {
@@ -122,8 +122,8 @@ export default {
 .textleft{text-align:left}
 .textright{text-align:right}
 .header{width:100%;padding:5px;margin:0;display: flex; background: #f2f2f2}
-.el-card >>> .el-card__body {height:100%}
-.el-card{height:100%}
+/* .el-card >>> .el-card__body {height:100%}
+.el-card{height:100%} */
 .product_content_sale{width:160px;height:80px; border:1px solid #eee;padding:10px 5px; background: lightgreen;cursor:-webkit-grab}
 .product_content{width:160px;height:80px; border:1px solid #eee;padding:10px 5px; background: lightblue;cursor:-webkit-grab}
 </style>
