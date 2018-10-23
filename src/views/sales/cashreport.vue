@@ -3,19 +3,20 @@
     <div ref="critheader" style="padding:10px 20px">
       <el-card>
         <SelectBranch typeclass="all" @BranchChanged="branchChangedEvent"/>
-        <!-- <el-button size="small" plain>今日</el-button>
-        <el-button size="small" plain>昨日</el-button> -->
-        <el-radio-group v-model="reporttype" size="small">
+        <!-- <el-radio-group v-model="reporttype" size="small">
           <el-radio-button label="昨日" />
           <el-radio-button label="本期" />
           <el-radio-button label="上期" />
           <el-radio-button label="本月" />
           <el-radio-button label="上月" />
-        </el-radio-group>
+        </el-radio-group> -->
+        <span style="font-size:14px">选择日期：</span>
         <el-date-picker
           v-model="dateRange"
           :default-time="['00:00:00', '23:59:59']"
+          :picker-options="pickerOptions"
           type="daterange"
+          format="yyyy 年 MM 月 dd 日"
           size="small"
           start-placeholder="开始日期"
           end-placeholder="结束日期" />
@@ -28,7 +29,7 @@
           <div style="flex:1 1 auto; text-align:right"> 报表日期：{{ repdate }}</div>
         </div>
       </div>
-      <el-table :data="orders" border size="small" height="100%">
+      <el-table :data="orders" :header-cell-style="tableheader" border size="small" height="100%">
         <el-table-column prop="reporder" label="序号" width="100"/>
         <el-table-column prop="billtype" label="项目"/>
         <el-table-column prop="amount" label="金额" width="200" align="right"/>
@@ -38,6 +39,7 @@
 </template>
 
 <script>
+import store from '@/store'
 import SelectBranch from '@/components/widgets/SelectBranch'
 import { getCashReportData } from '@/api/finreport'
 import { parseTime, getYesterday, getThisPeriodStart, getThisPeriodEnd,
@@ -54,37 +56,46 @@ export default {
       branches: [],
       orders: [],
       myHeight: '',
-      reporttype: '',
       repdate: '',
-      dateRange: []
+      dateRange: [],
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: '昨日',
+            onClick(picker) {
+              picker.$emit('pick', [getYesterday(), getYesterday()])
+            }
+          }, {
+            text: '本期',
+            onClick(picker) {
+              picker.$emit('pick', [getThisPeriodStart(), getThisPeriodEnd()])
+            }
+          }, {
+            text: '上期',
+            onClick(picker) {
+              picker.$emit('pick', [getLastPeriodStart(), getLastPeriodEnd()])
+            }
+          }, {
+            text: '本月',
+            onClick(picker) {
+              picker.$emit('pick', [getThisMonthStart(), getThisMonthEnd()])
+            }
+          }, {
+            text: '上月',
+            onClick(picker) {
+              picker.$emit('pick', [getLastMonthStart(), getLastMonthEnd()])
+            }
+          }
+        ]
+      }
     }
   },
   watch: {
     dateRange: function(val, oldval) {
       this.retrieveData()
-    },
-    reporttype: function(val, oldval) {
-      this.dateRange = []
-      if (val === '昨日') {
-        this.dateRange.push(getYesterday())
-        this.dateRange.push(getYesterday())
-      } else if (val === '本期') {
-        this.dateRange.push(getThisPeriodStart())
-        this.dateRange.push(getThisPeriodEnd())
-      } else if (val === '上期') {
-        this.dateRange.push(getLastPeriodStart())
-        this.dateRange.push(getLastPeriodEnd())
-      } else if (val === '本月') {
-        this.dateRange.push(getThisMonthStart())
-        this.dateRange.push(getThisMonthEnd())
-      } else if (val === '上月') {
-        this.dateRange.push(getLastMonthStart())
-        this.dateRange.push(getLastMonthEnd())
-      }
     }
   },
   mounted() {
-    // set content height
     const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight // 浏览器高度
     const critheaderheight = this.$refs.critheader.offsetHeight
     const tableheaderheight = this.$refs.tableheader.offsetHeight
@@ -95,30 +106,40 @@ export default {
       that.myHeight = (h - critheaderheight - tableheaderheight - 50) + 'px'
     }
   },
+  created: function() {
+    if (store.getters.roles.includes('branch')) {
+      this.selectedBranch = store.getters.branches
+      this.roleBranch = true
+    }
+  },
   methods: {
     branchChangedEvent(event) {
-      this.branchId = event.branchId
+      this.selectedBranch = event.branchId
       this.retrieveData()
-    },
-    confirmDateRegion: function() {
-      console.log('confirmDateRegion')
     },
     retrieveData() {
       this.orders = []
       if (this.dateRange.length === 0) {
         return
       }
-      if (this.branchId === '') {
+      if (this.selectedBranch === '') {
         return
       }
       var repdatefrom = parseTime(new Date(this.dateRange[0]), '{y}-{m}-{d}')
       var repdateto = parseTime(new Date(this.dateRange[1]), '{y}-{m}-{d}')
-      this.repdate = repdatefrom + '到' + repdateto
-      getCashReportData(this.branchId, repdatefrom, repdateto).then(response => {
+      this.repdate = parseTime(new Date(this.dateRange[0]), '{y}年{m}月{d}日') +
+      '到' + parseTime(new Date(this.dateRange[1]), '{y}年{m}月{d}日')
+      getCashReportData(this.selectedBranch, repdatefrom, repdateto).then(response => {
         this.orders = response.data
       }).catch(error => {
         console.log(error)
       })
+    },
+    /*
+    * 以下设置class
+    */
+    tableheader({ row, index }) {
+      return 'background:#DCDFE6;'
     }
   }
 }

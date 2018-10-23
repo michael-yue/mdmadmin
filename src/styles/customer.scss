@@ -9,7 +9,7 @@ ul{list-style: none; -webkit-padding-start: 0px;}
 .el-table td.level1style {background-color: #EBEEF5; }
 
 .el-card >>> .el-card__body {height:100%}
-.el-card{height:100%}
+.el-card{height:100%; overflow:auto}
 
 // body .el-table th.gutter{
 //     display: table-cell!important;

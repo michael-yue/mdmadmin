@@ -2,9 +2,9 @@
   <div class="finprofilereport">
     <div ref="critheader" style="padding:10px 20px">
       <el-card>
-        <div class="inlinelable">月份</div>
+        <div class="inlinelabel">月份</div>
         <el-date-picker v-model="selectedMonthStart" type="month" size="small" placeholder="选择月" style="width:120px"/>
-        <div class="inlinelable">到</div>
+        <div class="inlinelabel">到</div>
         <el-date-picker v-model="selectedMonthEnd" type="month" size="small" placeholder="选择月" style="width:120px"/>
         <SelectBranch typeclass="all" @BranchChanged="branchChangeEvent" />
         <el-switch v-model="reporttype" active-text="汇总" inactive-text="明细" />
@@ -153,12 +153,6 @@ export default {
         if (row.itemlevel !== '0') {
           style = style + ' indent' + row.itemlevel
         }
-      // } else {
-      //   console.log(row.itemname + '-' + row.type + '-' + row.typeclass)
-      //   if (row.typeclass === 'plan') {
-      //     console.log(row.itemname)
-      //     style = 'hide'
-      //   }
       }
 
       return style
@@ -261,11 +255,6 @@ export default {
 </script>
 
 <style scoped>
-.textright{ text-align: right}
-.inlinelable {position:relative;font-size:14px;display:inline-block;margin:0px}
+.inlinelabel {position:relative;font-size:14px;display:inline-block;margin:0px}
 .finprofilereport{height:100%}
-.el-card >>> .el-card__body {height:100%}
-.el-card{height:100%}
-
-/* .hide {background: #f99} */
 </style>

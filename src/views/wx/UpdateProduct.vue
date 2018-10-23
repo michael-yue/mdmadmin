@@ -5,10 +5,10 @@
         <SelectBranch typeclass="wx" @BranchChanged="branchChangeEvent" />
       </el-card>
     </div>
-    <div :style="{height: myHeight}" style="padding:10px 20px">
+    <div :style="{height: myHeight}" style="padding:10px 20px;overflow:auto">
       <el-card>
-        <div v-loading="loading" style="height:100%;overflow:auto">
-          <ul>
+        <div v-loading="loading" style="height:100%">
+          <ul >
             <li v-for="item in products" :key="item.prodtypeid">
               <h4>{{ item.prodtypename }}</h4>
               <ul style="display:flex;margin:15px;flex-wrap:wrap;font-size:13px">
@@ -58,7 +58,6 @@ export default {
   mounted() {
     const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight // 浏览器高度
     const critheaderheight = this.$refs.critheader.offsetHeight
-    console.log(critheaderheight)
     this.myHeight = (h - critheaderheight - 50) + 'px'
     var that = this
     window.onresize = function windowResize() {
@@ -70,7 +69,6 @@ export default {
     if (store.getters.roles.includes('branch')) {
       this.selectedBranch = store.getters.branches
       this.roleBranch = true
-      // this.retriveData()
     }
   },
   methods: {
