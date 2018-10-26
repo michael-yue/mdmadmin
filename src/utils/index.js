@@ -193,7 +193,7 @@ export function getLastMonthEnd() {
   if (month === 1) {
     month = 12
     year--
-  } else{
+  } else {
     month--
   }
   var new_date = new Date(year, month + 1, 1)

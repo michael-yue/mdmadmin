@@ -70,25 +70,25 @@ export const asyncRouterMap = [
     path: '/sales',
     component: Layout,
     name: 'sales',
-    meta: { title: '营运报表', icon: 'example', roles: ['finance1', 'marketing1', ] },
+    meta: { title: '营运报表', icon: 'example', roles: ['finance', 'marketing', 'branch'] },
     children: [
       {
         path: 'cashreport',
         name: 'cashreport',
         component: () => import('@/views/sales/cashreport'),
-        meta: { title: '营业收入报表', icon: 'table', roles: ['finance1', 'marketing1'] }
+        meta: { title: '营业收入报表', icon: 'table', roles: ['finance', 'marketing', 'branch'] }
       },
       {
         path: 'cashperiodreport',
         name: 'cashperiodreport',
         component: () => import('@/views/sales/cashperiodreport'),
-        meta: { title: '现金收入报表', icon: 'tree', roles: ['admin'] }
+        meta: { title: '现金收入报表', icon: 'tree', roles: ['finance', 'marketing', 'branch'] }
       },
       {
         path: 'salesreport',
         name: 'salesreport',
         component: () => import('@/views/sales/salesreport'),
-        meta: { title: '产品销售报表', icon: 'tree', roles: ['admin'] }
+        meta: { title: '产品销售报表', icon: 'tree', roles: ['finance', 'marketing', 'branch'] }
       },
       {
         path: 'cashsummaryreport',
@@ -167,6 +167,81 @@ export const asyncRouterMap = [
         name: 'mtunBindBranch',
         component: () => import('@/views/mt/unbindBranch'),
         meta: { title: '门店解绑', icon: 'table', roles: ['admin', 'marketing'] }
+      }
+    ]
+  },
+  {
+    path: '/po',
+    component: Layout,
+    meta: { title: '订货系统', icon: 'example', roles: ['admin'] },
+    children: [
+      {
+        path: 'poentry',
+        name: 'poentry',
+        component: () => import('@/views/po/poentry'),
+        meta: { title: '订货单维护', icon: 'table', roles: ['admin', 'branch1'] }
+      },
+      {
+        path: 'polist',
+        name: 'polist',
+        component: () => import('@/views/qywx/UserList'),
+        meta: { title: '订货单列表', icon: 'table', roles: ['admin', 'branch1'] }
+      },
+      {
+        path: 'branchinvlist',
+        name: 'branchinvlist',
+        component: () => import('@/views/qywx/UserList'),
+        meta: { title: '入库单列表', icon: 'table', roles: ['admin'] }
+      },
+      {
+        path: 'poreport',
+        name: 'poreport',
+        component: () => import('@/views/qywx/UserList'),
+        meta: { title: '采购汇总表', icon: 'table', roles: ['admin'] }
+      },
+      {
+        path: 'branchinvreport',
+        name: 'branchinvreport',
+        component: () => import('@/views/qywx/UserList'),
+        meta: { title: '物料盘点表', icon: 'table', roles: ['admin'] }
+      }
+    ]
+  },
+  {
+    path: '/card',
+    component: Layout,
+    meta: { title: '会员卡', icon: 'example', roles: ['admin'] },
+    children: [
+      {
+        path: 'cardList',
+        name: 'cardList',
+        component: () => import('@/views/qywx/UserList'),
+        meta: { title: '会员卡列表', icon: 'table', roles: ['admin'] }
+      },
+      {
+        path: 'userList',
+        name: 'userList',
+        component: () => import('@/views/qywx/UserList'),
+        meta: { title: '会员卡统计', icon: 'table', roles: ['admin'] }
+      }
+    ]
+  },
+  {
+    path: '/system',
+    component: Layout,
+    meta: { title: '系统设置', icon: 'example', roles: ['admin'] },
+    children: [
+      {
+        path: 'branchList',
+        name: 'branchList',
+        component: () => import('@/views/qywx/UserList'),
+        meta: { title: '门店设置', icon: 'table', roles: ['admin'] }
+      },
+      {
+        path: 'userList',
+        name: 'userList',
+        component: () => import('@/views/qywx/UserList'),
+        meta: { title: '用户设置', icon: 'table', roles: ['admin'] }
       }
     ]
   },

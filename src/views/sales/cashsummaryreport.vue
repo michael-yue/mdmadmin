@@ -3,16 +3,11 @@
     <div ref="critheader" style="padding:10px 20px">
       <el-card>
         <SelectBranch typeclass="all" @BranchChanged="branchChangedEvent"/>
-        <el-radio-group v-model="reporttype" size="small">
-          <el-radio-button label="昨日" />
-          <el-radio-button label="本期" />
-          <el-radio-button label="上期" />
-          <el-radio-button label="本月" />
-          <el-radio-button label="上月" />
-        </el-radio-group>
+        <span style="font-size:14px">选择日期：</span>
         <el-date-picker
           v-model="dateRange"
           :default-time="['00:00:00', '23:59:59']"
+          :picker-options="pickerOptions"
           type="daterange"
           size="small"
           start-placeholder="开始日期"
@@ -54,7 +49,7 @@ export default {
       myHeight: '',
       reporttype: '',
       repdate: '',
-      dateRange: []
+      dateRange: [],
     }
   },
   watch: {
