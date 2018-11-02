@@ -1,6 +1,6 @@
 <template>
   <div class="UpdateMtProduct">
-    <div v-show="!roleBranch" ref="critheader" style="padding:10px 20px">
+    <div ref="critheader" style="padding:10px 20px">
       <el-card>
         <SelectBranch typeclass="mt" @BranchChanged="branchChangeEvent" />
         <el-button type="primary" size="small" @click="mapdish">映射美团产品</el-button>
