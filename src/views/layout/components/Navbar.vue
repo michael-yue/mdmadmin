@@ -3,7 +3,7 @@
     <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
     <breadcrumb />
     <div class="avatar-container">
-      <el-button size="mini" style="margin-right:10px" @click="toggle">全屏</el-button>
+      <el-button v-if="device === 'desktop'" size="mini" style="margin-right:10px" @click="toggle">全屏</el-button>
       <el-dropdown trigger="click">
         <div class="avatar-wrapper">
           <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
@@ -46,7 +46,10 @@ export default {
     ...mapGetters([
       'sidebar',
       'avatar'
-    ])
+    ]),
+    device() {
+      return this.$store.state.app.device
+    }
   },
   created: function() {
     this.name = store.getters.name

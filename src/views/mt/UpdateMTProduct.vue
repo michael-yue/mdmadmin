@@ -6,13 +6,13 @@
         <el-button type="primary" size="small" @click="mapdish">映射美团产品</el-button>
       </el-card>
     </div>
-    <div :style="{height: myHeight}" style="padding:10px 20px">
+    <div :style="{height: myHeight}" class="padding:10px 20px">
       <el-card>
         <el-table v-loading="loading" :data="products" size="small" height="100%">
-          <el-table-column prop="prodid" label="收银系统产品代码" width="150"/>
-          <el-table-column prop="mtdishname" label="名称"/>
-          <el-table-column prop="mtdishid" label="美团代码"/>
-          <el-table-column label="操作" >
+          <el-table-column prop="prodid" label="收银产品代码"/>
+          <el-table-column prop="mtdishname" style="white-space:nowrap" label="名称"/>
+          <el-table-column v-if="device==='desktop'" prop="mtdishid" label="美团代码"/>
+          <el-table-column label="操作" align="right">
             <template slot-scope="props">
               <el-button type="success" size="small" @click="updatecode(props.$index, props.row)">修改代码</el-button>
             </template>
@@ -62,6 +62,11 @@ export default {
         mtdishid: ''
       },
       formLabelWidth: '150px'
+    }
+  },
+  computed:{
+    device() {
+      return this.$store.state.app.device
     }
   },
   watch: {
@@ -150,4 +155,9 @@ export default {
 .header{width:100%;padding:5px;margin:0;display: flex; background: #f2f2f2}
 .el-card >>> .el-card__body {height:100%}
 .el-card{height:100%}
+.el-table >>>.cell{white-space:nowrap}
+
+@media screen and (max-device-width: 420px) {
+  .el-dialog{width: 80%}
+}
 </style>

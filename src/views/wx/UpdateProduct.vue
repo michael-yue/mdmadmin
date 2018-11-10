@@ -5,14 +5,14 @@
         <SelectBranch typeclass="wx" @BranchChanged="branchChangeEvent" />
       </el-card>
     </div>
-    <div :style="{height: myHeight}" style="padding:10px 20px;overflow:auto">
+    <div :style="{height: myHeight}" class="contentwrapper">
       <el-card>
         <div v-loading="loading" style="height:100%">
           <ul >
             <li v-for="item in products" :key="item.prodtypeid">
               <h4>{{ item.prodtypename }}</h4>
-              <ul style="display:flex;margin:15px;flex-wrap:wrap;font-size:13px">
-                <li v-for="p in item.products" :key="p.productid" style="flex:0 1 auto;margin:10px">
+              <ul class="productcontainer">
+                <li v-for="p in item.products" :key="p.productid">
                   <div :class="{'product_content_sale':p.onsale==='1', 'product_content':p.onsale==='0'}" @click="update(p.productid, p.onsale)">
                     <div style="padding-bottom:10px">{{ p.productid }}</div>
                     <div style="padding-bottom:10px"> {{ p.name }}</div>
@@ -105,7 +105,7 @@ export default {
         that.retriveData()
         that.loading = false
       }).catch(error => {
-        console.log(error)
+        console.log(error)  
       })
     }
   }
@@ -124,4 +124,18 @@ export default {
 .el-card{height:100%} */
 .product_content_sale{width:160px;height:80px; border:1px solid #eee;padding:10px 5px; background: lightgreen;cursor:-webkit-grab}
 .product_content{width:160px;height:80px; border:1px solid #eee;padding:10px 5px; background: lightblue;cursor:-webkit-grab}
+
+div.product_content_sale:hover, div.product_content:hover{cursor:-webkit-grab;
+	  display: block;
+    color: #a00; font-size:14px;
+    -webkit-box-shadow: 0 10px 6px -6px #777;
+    -moz-box-shadow: 0 10px 6px -6px #777;
+    box-shadow: 4px 6px 12px 2px #777;}
+
+ul.productcontainer{display:flex;margin:15px;flex-wrap:wrap;font-size:13px}
+ul.productcontainer li{flex:0 1 auto;margin:10px}
+@media screen and (max-device-width: 420px) {
+  ul.productcontainer{display:flex;margin:5px 10px;flex-wrap:wrap;font-size:13px; justify-content: space-between}
+  ul.productcontainer li{flex:0 1 auto;margin:5px}
+}
 </style>
