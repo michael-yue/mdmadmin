@@ -160,13 +160,13 @@ export const asyncRouterMap = [
         path: 'mtBindBranch',
         name: 'mtBindBranch',
         component: () => import('@/views/mt/bindBranch'),
-        meta: { title: '绑定门店', icon: 'table', roles: ['admin', 'marketing'] }
+        meta: { title: '绑定门店', icon: 'table', roles: ['admin', 'marketing1'] }
       },
       {
         path: 'mtunBindBranch',
         name: 'mtunBindBranch',
         component: () => import('@/views/mt/unbindBranch'),
-        meta: { title: '门店解绑', icon: 'table', roles: ['admin', 'marketing'] }
+        meta: { title: '门店解绑', icon: 'table', roles: ['admin', 'marketing1'] }
       }
     ]
   },
@@ -178,7 +178,7 @@ export const asyncRouterMap = [
       {
         path: 'poentry',
         name: 'poentry',
-        component: () => import('@/views/po/poentry'),
+        component: () => import('@/views/qywx/UserList'),
         meta: { title: '订货单维护', icon: 'table', roles: ['admin', 'branch1'] }
       },
       {
@@ -234,14 +234,28 @@ export const asyncRouterMap = [
       {
         path: 'branchList',
         name: 'branchList',
-        component: () => import('@/views/qywx/UserList'),
+        component: () => import('@/views/admin/BranchList'),
         meta: { title: '门店设置', icon: 'table', roles: ['admin'] }
       },
       {
-        path: 'userList',
-        name: 'userList',
-        component: () => import('@/views/qywx/UserList'),
-        meta: { title: '用户设置', icon: 'table', roles: ['admin'] }
+        path: 'productList',
+        name: 'productList',
+        component: () => import('@/views/admin/ProductList'),
+        meta: { title: '产品设置', icon: 'table', roles: ['admin'] }
+      }
+    ]
+  },
+  {
+    path: '/doc',
+    component: Layout,
+    meta: { title: '帮助文档', icon: 'example', roles: ['admin'] },
+    component: () => import('@/views/doc/documnts'),
+    children: [
+      {
+        path: 'branchList',
+        name: 'branchList',
+        component: () => import('@/views/doc/documnts'),
+        meta: { title: '门店设置', icon: 'table', roles: ['admin'] }
       }
     ]
   },
