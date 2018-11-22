@@ -98,10 +98,11 @@ export default {
       if (val !== oldval) {
         this.tableData = []
       }
+      var a = 0
       if (val) {
         this.showcols = this.showcols.filter(t => t !== 'thisyearsummary')
         this.showcols = this.showcols.filter(t => t !== 'lastyearsummary')
-        var a = this.shows.findIndex((value, index, arr) => {
+        a = this.shows.findIndex((value, index, arr) => {
           return value.key === 'thisyearsummary'
         })
         this.shows[a].disabled = true
@@ -112,7 +113,7 @@ export default {
       } else {
         this.showcols.push('thisyearsummary')
         this.showcols.push('lastyearsummary')
-        var a = this.shows.findIndex((value, index, arr) => {
+        a = this.shows.findIndex((value, index, arr) => {
           return value.key === 'thisyearsummary'
         })
         this.shows[a].disabled = false

@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { listOrder } from '@/api/wxorder'
+// import { listOrder } from '@/api/wxorder'
 import { getWxBranch } from '@/api/branch'
 
 export default {
