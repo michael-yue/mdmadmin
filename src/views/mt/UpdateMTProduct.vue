@@ -64,7 +64,7 @@ export default {
       formLabelWidth: '150px'
     }
   },
-  computed:{
+  computed: {
     device() {
       return this.$store.state.app.device
     }

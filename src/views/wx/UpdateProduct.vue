@@ -105,7 +105,7 @@ export default {
         that.retriveData()
         that.loading = false
       }).catch(error => {
-        console.log(error)  
+        console.log(error)
       })
     }
   }
@@ -126,11 +126,12 @@ export default {
 .product_content{width:160px;height:80px; border:1px solid #eee;padding:10px 5px; background: lightblue;cursor:-webkit-grab}
 
 div.product_content_sale:hover, div.product_content:hover{cursor:-webkit-grab;
-	  display: block;
-    color: #a00; font-size:14px;
-    -webkit-box-shadow: 0 10px 6px -6px #777;
-    -moz-box-shadow: 0 10px 6px -6px #777;
-    box-shadow: 4px 6px 12px 2px #777;}
+  display: block;
+  color: #a00; font-size:14px;
+  -webkit-box-shadow: 0 10px 6px -6px #777;
+  -moz-box-shadow: 0 10px 6px -6px #777;
+  box-shadow: 4px 6px 12px 2px #777;
+}
 
 ul.productcontainer{display:flex;margin:15px;flex-wrap:wrap;font-size:13px}
 ul.productcontainer li{flex:0 1 auto;margin:10px}

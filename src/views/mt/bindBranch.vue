@@ -5,23 +5,23 @@
         <SelectBranch typeclass="mt" @BranchChanged="branchChangeEvent" />
         <el-button type="primary" size="small" @click="mapdish">映射美团产品</el-button>
       </el-card>
-    </div>    
-    <iframe v-show="iframeState" :id="show-iframe"  frameborder=0 name="showHere" scrolling=auto :src="bindBranchUrl"></iframe>
+    </div>
+    <iframe v-show="iframeState" :id="show-iframe" :src="bindBranchUrl" frameborder="0" name="showHere" scrolling="auto" />
   </div>
 </template>
 
 <script>
-import store from '@/store'
+// import store from '@/store'
 import SelectBranch from '@/components/widgets/SelectBranch'
 export default {
-  name: 'bindMeituanBranch',
+  name: 'BindMeituanBranch',
   components: {
     SelectBranch
   },
-  data () {
+  data() {
     return {
-      iframeState:false,
-      bindBranchUrl: ""
+      iframeState: false,
+      bindBranchUrl: ''
     }
   },
   watch: {
@@ -31,15 +31,15 @@ export default {
       }
     }
   },
-  mounted(){
+  mounted() {
     const oIframe = document.getElementById('show-iframe')
     const deviceWidth = document.documentElement.clientWidth
     const deviceHeight = document.documentElement.clientHeight
     oIframe.style.width = deviceWidth + 'px'
     oIframe.style.height = deviceHeight + 'px'
   },
-  methods:{
-    showIframe(){
+  methods: {
+    showIframe() {
       this.goBackState = true
       this.iframeState = true
     }

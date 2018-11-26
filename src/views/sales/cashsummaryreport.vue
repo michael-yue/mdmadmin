@@ -49,7 +49,7 @@ export default {
       myHeight: '',
       reporttype: '',
       repdate: '',
-      dateRange: [],
+      dateRange: []
     }
   },
   watch: {
