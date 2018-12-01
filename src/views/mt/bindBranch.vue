@@ -3,7 +3,7 @@
     <div ref="critheader" style="padding:10px 20px">
       <el-card>
         <SelectBranch typeclass="mt" @BranchChanged="branchChangeEvent" />
-        <el-button type="primary" size="small" @click="mapdish">映射美团产品</el-button>
+        <el-button type="primary" size="small" @click="bindBranch">绑定美团门店</el-button>
       </el-card>
     </div>
     <iframe v-show="iframeState" :id="show-iframe" :src="bindBranchUrl" frameborder="0" name="showHere" scrolling="auto" />
@@ -42,6 +42,9 @@ export default {
     showIframe() {
       this.goBackState = true
       this.iframeState = true
+    },
+    bindBranch(){
+      this.bindBranchUrl = "http://www.baidu.com"
     }
   }
 }

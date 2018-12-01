@@ -215,14 +215,32 @@ export const asyncRouterMap = [
       {
         path: 'cardList',
         name: 'cardList',
-        component: () => import('@/views/qywx/UserList'),
+        component: () => import('@/views/card/CardList'),
         meta: { title: '会员卡列表', icon: 'table', roles: ['admin'] }
       },
       {
-        path: 'userList',
-        name: 'userList',
-        component: () => import('@/views/qywx/UserList'),
+        path: 'cardStat',
+        name: 'cardStat',
+        component: () => import('@/views/card/CardStat'),
         meta: { title: '会员卡统计', icon: 'table', roles: ['admin'] }
+      },
+      {
+        path: 'cardQuery',
+        name: 'cardQuery',
+        component: () => import('@/views/card/CardQuery'),
+        meta: { title: '会员卡查询', icon: 'table', roles: ['admin'] }
+      },
+      {
+        path: 'cardRechargeStat',
+        name: 'cardRechargeStat',
+        component: () => import('@/views/card/CardRechargeStat'),
+        meta: { title: '充值统计', icon: 'table', roles: ['admin'] }
+      },
+      {
+        path: 'cardTransactionStat',
+        name: 'cardTransactionStat',
+        component: () => import('@/views/card/CardTransactionStat'),
+        meta: { title: '消费统计', icon: 'table', roles: ['admin'] }
       }
     ]
   },
@@ -249,11 +267,11 @@ export const asyncRouterMap = [
     path: '/doc',
     component: Layout,
     meta: { title: '帮助文档', icon: 'example', roles: ['admin'] },
-    component: () => import('@/views/doc/documnts'),
+    // component: () => import('@/views/doc/documnts'),
     children: [
       {
-        path: 'branchList',
-        name: 'branchList',
+        path: 'help',
+        name: 'help',
         component: () => import('@/views/doc/documnts'),
         meta: { title: '门店设置', icon: 'table', roles: ['admin'] }
       }
