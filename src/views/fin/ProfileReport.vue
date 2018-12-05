@@ -98,7 +98,11 @@ export default {
       if (val !== oldval) {
         this.tableData = []
       }
+<<<<<<< HEAD
       var a
+=======
+      var a = 0
+>>>>>>> 22cf30fe648a32b5754625db9f21a3462936ee9f
       if (val) {
         this.showcols = this.showcols.filter(t => t !== 'thisyearsummary')
         this.showcols = this.showcols.filter(t => t !== 'lastyearsummary')
