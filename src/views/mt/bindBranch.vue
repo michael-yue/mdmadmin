@@ -13,6 +13,8 @@
 <script>
 // import store from '@/store'
 import SelectBranch from '@/components/widgets/SelectBranch'
+import { bindBranch } from '@/api/mt.js'
+
 export default {
   name: 'BindMeituanBranch',
   components: {
@@ -44,6 +46,9 @@ export default {
       this.iframeState = true
     },
     bindBranch(){
+      bindBranch(branchid){
+        
+      }
       this.bindBranchUrl = "http://www.baidu.com"
     }
   }
