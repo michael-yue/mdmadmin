@@ -260,6 +260,32 @@ export const asyncRouterMap = [
         name: 'productList',
         component: () => import('@/views/admin/ProductList'),
         meta: { title: '产品设置', icon: 'table', roles: ['admin'] }
+      },
+      {
+        path: 'branchProductList',
+        name: 'branchProductList',
+        component: () => import('@/views/admin/BranchProductList'),
+        meta: { title: '门店产品设置', icon: 'table', roles: ['admin'] }
+      }
+    ]
+  },
+  {
+    path: '/wxcard',
+    component: Layout,
+    meta: { title: '微信卡券', icon: 'example', roles: ['admin'] },
+    // component: () => import('@/views/doc/documnts'),
+    children: [
+      {
+        path: 'wxcardlist',
+        name: 'wxcardlist',
+        component: () => import('@/views/wx/wxCardList'),
+        meta: { title: '所有卡券', icon: 'table', roles: ['admin'] }
+      },
+      {
+        path: 'wxbranchcardlist',
+        name: 'wxbranchcardlist',
+        component: () => import('@/views/wx/wxCardList'),
+        meta: { title: '门店卡券', icon: 'table', roles: ['admin'] }
       }
     ]
   },

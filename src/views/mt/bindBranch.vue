@@ -23,7 +23,8 @@ export default {
   data() {
     return {
       iframeState: false,
-      bindBranchUrl: ''
+      bindBranchUrl: '',
+      branchid: ''
     }
   },
   watch: {
@@ -45,11 +46,12 @@ export default {
       this.goBackState = true
       this.iframeState = true
     },
-    bindBranch(){
-      bindBranch(branchid){
-        
-      }
-      this.bindBranchUrl = "http://www.baidu.com"
+    bindBranch() {
+      var that = this
+      bindBranch(this.branchid).then(response => {
+        console.log('bind')
+        that.bindBranchUrl = 'http://www.baidu.com'
+      })
     }
   }
 }
