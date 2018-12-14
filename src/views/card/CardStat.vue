@@ -25,28 +25,22 @@
         border
         size="small"
         height="100%">
-        <el-table-column prop="customerid" label="会员卡号" width="" header-align="center" align="right" />
+        <el-table-column prop="branchname" label="门店" width="" header-align="center" align="right" />
         <el-table-column prop="customername" label="会员卡号" width="" header-align="center" align="right" />
         <el-table-column prop="registdate" label="开卡时间" width="" header-align="center" label-class-name	="header" align="left" />
         <el-table-column prop="balance" label="余额" width="" header-align="center" align="right" />
         <el-table-column prop="balance" label="充值金额" width="" header-align="center" align="right" />
         <el-table-column prop="status" label="状态" width="" header-align="center" align="right" />
       </el-table>
-      <vpagination :total="total" :display="limit" :current-page="current" @pagechange="pagechange" />
     </div>
   </div>
 </template>
 
 <script>
-import store from '@/store'
-import vpagination from '@/components/widgets/Pagination'
-import { listAll } from '@/api/card.js'
+import { listStatByBranch } from '@/api/card.js'
 
 export default {
   name: 'CardList',
-  components: {
-    vpagination
-  },
   data() {
     return {
       myHeight: '',
@@ -71,15 +65,10 @@ export default {
       that.myHeight = (h - critheaderheight - 100) + 'px'
     }
   },
-  created: function() {
-    if (store.getters.roles.includes('branch')) {
-      this.selectedBranch = store.getters.branches
-    }
-  },
   methods: {
     retrieve: function(currentPage) {
       this.loading = true
-      listAll(this.selectedBranch, currentPage, this.limit).then(response => {
+      listStatByBranch(this.selectedBranch, currentPage, this.limit).then(response => {
         this.tableData = response.data.cards
         this.total = response.data.totalnum
         this.loading = false
