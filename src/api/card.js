@@ -11,3 +11,15 @@ export function listAll(branchid, currentpage, limit) {
     }
   })
 }
+export function listStatByBranch(startdate, enddate, amount) {
+  return request({
+    url: '/api/listCardsAll',
+    method: 'get',
+    params: {
+      startdate,
+      enddate,
+      amount
+    }
+  })
+}
+

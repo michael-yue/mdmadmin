@@ -98,13 +98,7 @@ export default {
     // 分页处理
     pagechange: function(currentPage) {
       // retrieveData(currentPage)
-      listAll(this.selectedBranch, currentPage, this.limit).then(response => {
-        this.tableData = response.data.cards
-        this.total = response.data.totalnum
-        this.loading = false
-      }).catch(error => {
-        console.log(error)
-      })
+      this.retrieve(currentPage)
     }
   }
 }

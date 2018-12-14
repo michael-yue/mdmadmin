@@ -222,7 +222,7 @@ export const asyncRouterMap = [
         path: 'cardStat',
         name: 'cardStat',
         component: () => import('@/views/card/CardStat'),
-        meta: { title: '会员卡统计', icon: 'table', roles: ['admin'] }
+        meta: { title: '门店汇总统计', icon: 'table', roles: ['admin'] }
       },
       {
         path: 'cardQuery',

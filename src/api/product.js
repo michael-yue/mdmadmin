@@ -1,9 +1,13 @@
 import request from '@/utils/request'
 
-export function listProduct() {
+export function listProduct(currentpage, limit) {
   return request({
     url: '/api/listProduct?t=' + Date.now(),
-    method: 'get'
+    method: 'get',
+    params: {
+      currentpage,
+      limit
+    }
   })
 }
 

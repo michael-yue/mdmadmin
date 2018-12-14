@@ -2,18 +2,7 @@
   <div class="productlist">
     <div ref="critheader" style="padding:10px 20px">
       <el-card>
-        <div style="inline-block">
-          <div class="inlinelabel">门店</div>
-          <el-select v-model="selectedBranchId" size="small" class="text-left">
-            <el-option v-for="item in branches" :value="item.branchId" :label="item.name" :key="item.id" name="branch" placeholder="请选择门店">
-              {{ item.name }}
-            </el-option>
-          </el-select>
-        </div>
-        <el-radio-group>
-          <el-radio-button size="small">在售</el-radio-button>
-          <el-radio-button size="small">下架</el-radio-button>
-        </el-radio-group>
+        <el-date-picker v-model="selectedDate" type="date" size="small" placeholder="选择日期" style="width:140px"/>
         <el-button type="primary" plain size="small" style="margin-left:20px" @click="retrieveData" >查询</el-button>
       </el-card>
     </div>
@@ -27,23 +16,16 @@
         border
         size="small"
         height="100%">
-        <el-table-column prop="photo" label="图片" width="" header-align="center" align="center" >
+        <el-table-column prop="photo" label="图片" width="" header-align="center" align="right" >
           <template slot-scope="props">
-            <img :src="props.row.photo" alt="" style="width: 80px;height: 70px">
+            <!-- <img src="{{ props.row.photo }}" /> -->
+            {{ props.row.photo }}
           </template>
         </el-table-column>
         <el-table-column prop="productid" label="产品编码" width="" header-align="center" align="left" />
         <el-table-column prop="name" label="产品名称" width="" header-align="center" align="left" />
         <el-table-column prop="type" label="产品类别" width="" header-align="center" label-class-name	="header" align="left" />
         <el-table-column prop="price" label="单价" width="" header-align="center" align="right" />
-        <el-table-column prop="onsale" label="操作" width="" header-align="center" align="center" >
-          <template slot-scope="props">
-            <div style="display:flex">
-              <el-button size="small">详细</el-button>
-              <el-button size="small">门店</el-button>
-            </div>
-          </template>
-        </el-table-column>
       </el-table>
       <vpagination :total="total" :display="limit" :current-page="current" @pagechange="pagechange" />
     </div>
@@ -104,7 +86,14 @@ export default {
     },
     // 分页处理
     pagechange: function(currentPage) {
-      this.retrieve(currentPage)
+      // retrieveData(currentPage)
+      listProduct(currentPage, this.limit).then(response => {
+        this.tableData = response.data.products
+        this.total = response.data.totalnum
+        this.loading = false
+      }).catch(error => {
+        console.log(error)
+      })
     }
   }
 }
