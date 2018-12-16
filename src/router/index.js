@@ -210,19 +210,19 @@ export const asyncRouterMap = [
   {
     path: '/card',
     component: Layout,
-    meta: { title: '会员卡', icon: 'example', roles: ['admin'] },
+    meta: { title: '会员卡', icon: 'example', roles: ['admin', 'marketing'] },
     children: [
       {
         path: 'cardList',
         name: 'cardList',
         component: () => import('@/views/card/CardList'),
-        meta: { title: '会员卡列表', icon: 'table', roles: ['admin'] }
+        meta: { title: '会员卡列表', icon: 'table', roles: ['admin', 'marketing'] }
       },
       {
         path: 'cardStat',
         name: 'cardStat',
         component: () => import('@/views/card/CardStat'),
-        meta: { title: '门店汇总统计', icon: 'table', roles: ['admin'] }
+        meta: { title: '门店新卡统计', icon: 'table', roles: ['admin', 'marketing'] }
       },
       {
         path: 'cardQuery',
