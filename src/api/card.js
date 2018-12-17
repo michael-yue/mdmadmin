@@ -23,3 +23,26 @@ export function listStatByBranch(startdate, enddate, amount) {
   })
 }
 
+export function listCardRechargeSum(branchid, startdate, enddate) {
+  return request({
+    url: '/api/listCardRechargeSum',
+    method: 'get',
+    params: {
+      branchid,
+      startdate,
+      enddate
+    }
+  })
+}
+
+export function listCardRechargeGroup(branchid, startdate, enddate) {
+  return request({
+    url: '/api/listCardRechargeGroup',
+    method: 'get',
+    params: {
+      branchid,
+      startdate,
+      enddate
+    }
+  })
+}
