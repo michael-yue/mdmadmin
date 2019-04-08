@@ -3,18 +3,12 @@
     <div ref="critheader" style="padding:10px 20px">
       <el-card>
         <div style="inline-block">
-          <div class="inlinelabel">门店</div>
-          <el-select v-model="selectedBranchId" size="small" class="text-left">
-            <el-option v-for="item in branches" :value="item.branchId" :label="item.name" :key="item.id" name="branch" placeholder="请选择门店">
-              {{ item.name }}
-            </el-option>
-          </el-select>
+          <div class="inlinelabel">产品类型</div>
         </div>
         <el-radio-group>
           <el-radio-button size="small">在售</el-radio-button>
           <el-radio-button size="small">下架</el-radio-button>
         </el-radio-group>
-        <el-button type="primary" plain size="small" style="margin-left:20px" @click="retrieveData" >查询</el-button>
       </el-card>
     </div>
     <div :style="{height: myHeight}" style="padding:0 20px 10px 20px;">
@@ -24,7 +18,6 @@
         :data="tableData"
         :class="{'tablestyle': true}"
         :header-cell-style="tableheader"
-        border
         size="small"
         height="100%">
         <el-table-column prop="photo" label="图片" width="" header-align="center" align="center" >
@@ -36,17 +29,75 @@
         <el-table-column prop="name" label="产品名称" width="" header-align="center" align="left" />
         <el-table-column prop="type" label="产品类别" width="" header-align="center" label-class-name	="header" align="left" />
         <el-table-column prop="price" label="单价" width="" header-align="center" align="right" />
-        <el-table-column prop="onsale" label="操作" width="" header-align="center" align="center" >
+        <el-table-column prop="onsale" label="操作" width="" header-align="center" align="right" >
           <template slot-scope="props">
             <div style="display:flex">
-              <el-button size="small">详细</el-button>
-              <el-button size="small">门店</el-button>
+              <el-button type="primary" size="small" @click="ShowProdDetail(props.row.id)">详细</el-button>
+              <el-button type="primary" size="small">售卖门店</el-button>
             </div>
           </template>
         </el-table-column>
       </el-table>
-      <vpagination :total="total" :display="limit" :current-page="current" @pagechange="pagechange" />
+      <div style="margin-top:10px; text-align: right">
+        <el-pagination
+          :current-page="currentPage"
+          :page-size="limit"
+          :total="total"
+          layout="total, sizes, prev, pager, next"
+          @size-change="handleSizeChange"
+          @current-change="pagechange" />
+      </div>
     </div>
+    <el-dialog
+      :visible.sync="dialogDetail"
+      :fullscreen="false"
+      :modal="true"
+      :show-close="true"
+      title="人员信息"
+      top="5vh">
+      <div>
+        <el-form ref="editForm" :model="editForm" :rules="editFormRules" label-width="100px">
+          <el-form-item label="姓名" prop="name">
+            <el-input v-model="editForm.name" size="small" maxlength="40"/>
+          </el-form-item>
+          <el-form-item label="单位" prop="branchid">
+            <branch-selector :branch-id="editForm.branchid" @BranchChanged="branchSelectedEvent" />
+          </el-form-item>
+          <el-form-item label="登录名" prop="loginid">
+            <el-input v-model="editForm.loginid" size="small" maxlength="20"/>
+          </el-form-item>
+          <el-form-item label="密码" prop="password">
+            <el-input v-model="editForm.password" size="small" maxlength="20"/>
+          </el-form-item>
+          <el-form-item label="类型" prop="positionid">
+            <user-position-selector :user-position-id="editForm.positionid" @PositionChanged="userPositionSelectedEvent"/>
+          </el-form-item>
+          <el-row>
+            <el-col :span="10">
+              <el-form-item label="职级" prop="levelid">
+                <user-level-selector :user-level-id="editForm.levelid" @LevelChanged="levelSelectedEvent"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="14">
+              <el-form-item label="测评人职级" prop="type">
+                <user-level-selector :user-level-id="editForm.type" @LevelChanged="TypeSelectedEvent"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-form-item label="职位">
+            <el-input v-model="editForm.title" size="small" maxlength="40"/>
+          </el-form-item>
+          <el-form-item label="">
+            <el-checkbox v-model="editForm.role">实名用户</el-checkbox>
+          </el-form-item>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="medium" @click="closeDialog">取 消</el-button>
+        <el-button v-if="dialogStatus=='create'" type="primary" @click="createdata">添加</el-button>
+        <el-button v-else type="primary" @click="updatedata">修改</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -67,8 +118,15 @@ export default {
       tableData: [],
       total: 0,
       limit: 15,
-      current: 1
+      currentPage: 1,
+      // dialog
+      dialogDetail: false,
+      editForm: {
+        id: '',
+        name: ''
+      }
       // flag: false
+
     }
   },
   mounted() {
@@ -102,9 +160,17 @@ export default {
     tableheader({ row, index }) {
       return 'background:#DCDFE6;'
     },
+    ShowProdDetail: function(id) {
+      this.dialogDetail = true
+    },
     // 分页处理
     pagechange: function(currentPage) {
-      this.retrieve(currentPage)
+      this.currentPage = currentPage
+      this.retrieve()
+    },
+    handleSizeChange: function(currentSize) {
+      this.limit = currentSize
+      this.retrieve()
     }
   }
 }

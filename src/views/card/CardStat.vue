@@ -13,11 +13,13 @@
           stripe
           start-placeholder="开始日期"
           end-placeholder="结束日期" />
+        <el-button :loading="downloading" type="primary" plain size="small" icon="document" @click="handleDownload">导出excel</el-button>
       </el-card>
     </div>
     <div :style="{height: myHeight}" style="padding:0 20px 10px 20px;">
       <el-table
         v-loading="loading"
+        id="datatable"
         ref="refTable"
         :data="tableData"
         :class="{'tablestyle': true}"
@@ -40,6 +42,9 @@ import { listStatByBranch } from '@/api/card.js'
 import { parseTime, getYesterday, getThisPeriodStart, getThisPeriodEnd,
   getLastPeriodStart, getLastPeriodEnd, getThisMonthStart, getThisMonthEnd,
   getLastMonthStart, getLastMonthEnd } from '@/utils'
+import FileSaver from 'file-saver'
+import XLSX from 'xlsx'
+
 export default {
   name: 'CardList',
   data() {
@@ -78,6 +83,7 @@ export default {
         ]
       },
       // 表格变量
+      downloading: false,
       tableData: []
       // flag: false
     }
@@ -139,6 +145,51 @@ export default {
     },
     tableheader({ row, index }) {
       return 'background:#DCDFE6;'
+    },
+    handleDownload() {
+      this.downloading = true
+      // require.ensure([], () => {
+      //   // const { export_json_to_excel } = require('@/vendor/Export2Excel')
+      //   // const tHeader = ['日期', '姓名', '地址']
+      //   // const filterVal = ['itemid', 'planamount1', 'actualamount1']
+      //   // const list = this.tableData
+      //   // const data = this.formatJson(filterVal, list)
+      //   // export_json_to_excel(tHeader, data, '利润报表')
+      //   const { export_table_to_excel } = require('@/vendor/Export2Excel')
+      //   export_table_to_excel(id)
+      //   this.downloading = false
+      // })
+      // const wb = XLSX.utils.table_to_book(document.querySelector('#datatable'))
+      /* get binary string as output */
+      // const wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+      // 判断要导出的节点中是否有fixed的表格，如果有，转换excel时先将该dom移除，然后append回去，
+      var fix = document.querySelector('.el-table__fixed')
+      var wb
+      if (fix) {
+        wb = XLSX.utils.table_to_book(document.querySelector('#datatable').removeChild(fix))
+        document.querySelector('#datatable').appendChild(fix)
+      } else {
+        wb = XLSX.utils.table_to_book(document.querySelector('#datatable'))
+      }
+
+      /* get binary string as output */
+      var wbout = XLSX.write(wb, {
+        bookType: 'xlsx',
+        bookSST: true,
+        type: 'array'
+      })
+      try {
+        FileSaver.saveAs(
+          new Blob([wbout], {
+            type: 'application/octet-stream'
+          }),
+          '会员卡开卡统计.xlsx'
+        )
+      } catch (e) {
+        if (typeof console !== 'undefined') console.log(e, wbout)
+      }
+      this.downloading = false
+      return wbout
     }
   }
 }

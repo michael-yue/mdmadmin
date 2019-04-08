@@ -118,10 +118,16 @@ export const asyncRouterMap = [
         meta: { title: '微信产品', icon: 'table', roles: ['branch', 'marketing'] }
       },
       {
+        path: 'wxOrderListMobile',
+        name: 'wxOrderListMobile',
+        component: () => import('@/views/wx/OrderListMobile'),
+        meta: { title: '微信订单', icon: 'tree', roles: ['branch', 'marketing'] }
+      },
+      {
         path: 'wxOrderList',
         name: 'wxOrderList',
         component: () => import('@/views/wx/OrderList'),
-        meta: { title: '微信订单', icon: 'tree', roles: ['branch', 'marketing'] }
+        meta: { title: '微信订单（退）', icon: 'tree', roles: ['branch', 'marketing'] }
       }
     ]
   },
