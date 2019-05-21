@@ -1,6 +1,6 @@
 <template>
   <div class="cardQuery">
-    <div ref="critheader" style="padding:10px 20px">
+    <div ref="critheader" style="padding:10px 10px">
       <span>test</span>
     </div>
     <div>
