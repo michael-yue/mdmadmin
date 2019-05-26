@@ -9,10 +9,14 @@
       <div ref="statdiv" class="stat" style="padding:10px ">
         <div>笔数：{{ totalcount }} </div>
         <div>合计金额：{{ totalamount }}</div>
-      </div>    
+      </div>
     </div>
-    <el-main v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.3)"
-         element-loading-text="图标正在加载中" :style="{height: myHeight}" style="padding:0">
+    <el-main
+      v-loading="loading"
+      :style="{height: myHeight}"
+      element-loading-background="rgba(0, 0, 0, 0.3)"
+      element-loading-text="图标正在加载中"
+      style="padding:0">
       <el-table
         v-loading="loading"
         ref="refTable"
@@ -61,6 +65,12 @@ export default {
     SelectBranch,
     OrderItems
   },
+  filters: {
+    formatDate(time) {
+      const date = new Date(time)
+      return parseTime(date, '{h}:{i}')
+    }
+  },
   data() {
     return {
       dialogDetail: false,
@@ -102,12 +112,6 @@ export default {
   created: function() {
     if (store.getters.roles.includes('branch')) {
       this.selectedBranch = store.getters.branches
-    }
-  },
-  filters: {
-    formatDate(time) {
-      const date = new Date(time)
-      return parseTime(date, '{h}:{i}')
     }
   },
   methods: {

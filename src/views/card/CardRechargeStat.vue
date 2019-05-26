@@ -65,7 +65,8 @@ import { parseTime, getYesterday, getThisPeriodStart, getThisPeriodEnd,
   getLastPeriodStart, getLastPeriodEnd, getThisMonthStart, getThisMonthEnd,
   getLastMonthStart, getLastMonthEnd } from '@/utils'
 import vpagination from '@/components/widgets/Pagination'
-import { listCardRechargeSum, listCardRechargeGroup } from '@/api/card.js'
+// import { listCardRechargeSum, listCardRechargeGroup } from '@/api/card.js'
+import { listAll } from '@/api/card.js'
 
 export default {
   name: 'CardList',

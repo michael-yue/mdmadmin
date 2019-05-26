@@ -8,6 +8,8 @@
       </el-card>
       <div ref="statdiv" class="stat" style="padding:10px ">
         <div>笔数：{{ totalcount }} </div>
+        <div>应收金额：{{ shouldpayamount }}</div>
+        <div>退款金额：{{ refundamount }}</div>
         <div>合计金额：{{ totalamount }}</div>
       </div>
     </div>
@@ -152,6 +154,8 @@ export default {
       },
       totalcount: 0,
       totalamount: 0,
+      shouldpayamount: 0,
+      refundamount: 0,
       limit: 10,
       currentPage: 1,
       myHeight: '',
@@ -199,6 +203,8 @@ export default {
       listWxOrderPage(this.selectedBranch, qdate, this.limit, this.currentPage).then(response => {
         this.orders = response.data
         this.totalcount = response.totalcount
+        this.shouldpayamount = response.shouldpayamount
+        this.refundamount = response.refundamount
         this.totalamount = response.totalamount
         this.loading = false
       }).catch(error => {
@@ -219,7 +225,7 @@ export default {
             type: 'danger'
           })
         }
-      }).catch(error => {asz67
+      }).catch(error => {
         console.log(error)
       })
     },
@@ -227,11 +233,11 @@ export default {
       if (row.refundnum === '') {
         return
       }
-      const refundnum = Number(row.refundnum)
+      // const refundnum = Number(row.refundnum)
       this.refundloading = true
       wxRefund(this.selectedBranch, orderid, row.prodid, row.zf, row.refundnum).then(response => {
-        console.log(response.code)
-        console.log(response.data)
+        // console.log(response.code)
+        // console.log(response.data)
         this.refundloading = false
         this.dialogDetail = false
         this.retrieveData()
