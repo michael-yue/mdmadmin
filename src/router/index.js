@@ -118,32 +118,13 @@ export const asyncRouterMap = [
         meta: { title: '微信产品', icon: 'table', roles: ['branch', 'marketing'] }
       },
       {
-        path: 'wxOrderListMobile',
-        name: 'wxOrderListMobile',
-        component: () => import('@/views/wx/OrderListMobile'),
-        meta: { title: '微信订单', icon: 'tree', roles: ['branch', 'marketing'] }
-      },
-      {
         path: 'wxOrderList',
         name: 'wxOrderList',
         component: () => import('@/views/wx/OrderList'),
-        meta: { title: '微信订单（退）', icon: 'tree', roles: ['branch', 'marketing'] }
+        meta: { title: '微信订单', icon: 'tree', roles: ['branch', 'marketing'] }
       }
     ]
   },
-  // {
-  //   path: '/qywx',
-  //   component: Layout,
-  //   meta: { title: '企业微信', icon: 'example', roles: ['admin'] },
-  //   children: [
-  //     {
-  //       path: 'qywxUserList',
-  //       name: 'qywxUserList',
-  //       component: () => import('@/views/qywx/UserList'),
-  //       meta: { title: '用户设置', icon: 'table', roles: ['admin'] }
-  //     }
-  //   ]
-  // },
   {
     path: '/mt',
     component: Layout,
@@ -275,26 +256,26 @@ export const asyncRouterMap = [
       }
     ]
   },
-  {
-    path: '/wxcard',
-    component: Layout,
-    meta: { title: '微信卡券', icon: 'example', roles: ['admin'] },
-    // component: () => import('@/views/doc/documnts'),
-    children: [
-      {
-        path: 'wxcardlist',
-        name: 'wxcardlist',
-        component: () => import('@/views/wx/wxCardList'),
-        meta: { title: '所有卡券', icon: 'table', roles: ['admin'] }
-      },
-      {
-        path: 'wxbranchcardlist',
-        name: 'wxbranchcardlist',
-        component: () => import('@/views/wx/wxCardList'),
-        meta: { title: '门店卡券', icon: 'table', roles: ['admin'] }
-      }
-    ]
-  },
+  // {
+  //   path: '/wxcard',
+  //   component: Layout,
+  //   meta: { title: '微信卡券', icon: 'example', roles: ['admin'] },
+  //   // component: () => import('@/views/doc/documnts'),
+  //   children: [
+  //     {
+  //       path: 'wxcardlist',
+  //       name: 'wxcardlist',
+  //       component: () => import('@/views/wx/wxCardList'),
+  //       meta: { title: '所有卡券', icon: 'table', roles: ['admin'] }
+  //     },
+  //     {
+  //       path: 'wxbranchcardlist',
+  //       name: 'wxbranchcardlist',
+  //       component: () => import('@/views/wx/wxCardList'),
+  //       meta: { title: '门店卡券', icon: 'table', roles: ['admin'] }
+  //     }
+  //   ]
+  // },
   {
     path: '/doc',
     component: Layout,
