@@ -144,6 +144,12 @@ export const asyncRouterMap = [
         meta: { title: '美团订单', icon: 'tree', roles: ['branch', 'marketing'] }
       },
       {
+        path: 'mtProduct',
+        name: 'mtProduct',
+        component: () => import('@/views/mt/Product'),
+        meta: { title: '美团产品(new)', icon: 'table', roles: [ 'marketing'] }
+      },
+      {
         path: 'mtBindBranch',
         name: 'mtBindBranch',
         component: () => import('@/views/mt/bindBranch'),

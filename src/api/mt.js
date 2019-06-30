@@ -9,3 +9,23 @@ export function bindBranch(branchid) {
     }
   })
 }
+
+export function listAllCatByBranch (branchid) {
+  return request({
+    url: '/api/listAllCatByBranch',
+    method: 'get',
+    params: {
+      branchid
+    }
+  })
+}
+
+export function listAllProductByBranch (branchid) {
+  return request({
+    url: '/api/listAllProductByBranch',
+    method: 'get',
+    params: {
+      branchid
+    }
+  })
+}
