@@ -3,7 +3,28 @@
     <!-- <div class="dashboard-text">{{ name }}</div> -->
     <!-- <div class="dashboard-text">roles:<span v-for="role in roles" :key="role">{{ role }}</span></div> -->
     <div v-show="roles.includes('branch')">
-      门店用户
+      <section class="wx">
+        <span>微信</span>
+        <ul>
+          <li @click="goLink('/wx/wxUpdateProduct')"><span>微信产品</span></li>
+          <li @click="goLink('/wx/wxOrderList')"><span>微信订单</span></li>
+        </ul>
+      </section>
+      <section class="mt">
+        <span>美团</span>
+        <ul>
+          <li @click="goLink('/mt/mtUpdateProduct')"><span>美团产品</span></li>
+          <li @click="goLink('/mt/mtOrderList')"><span>美团订单</span></li>
+        </ul>
+      </section>
+      <section class="report">
+        <span>营运报表</span>
+        <ul>
+          <li @click="goLink('/sales/cashreport')"><span>营业收入报表</span></li>
+          <li @click="goLink('/sales/cashperiodreport')"><span>现金收入报表</span></li>
+          <li @click="goLink('/sales/salesreport')"><span>产品销售表</span></li>
+        </ul>
+      </section>
     </div>
     <div v-show="roles.includes('admin')">
       管理员用户
@@ -42,6 +63,11 @@ export default {
       'name',
       'roles'
     ])
+  },
+  methods: {
+    goLink: function(address) {
+      this.$router.push(address)
+    }
   }
 }
 </script>
@@ -55,11 +81,16 @@ export default {
     font-size: 30px;
     line-height: 46px;
   }
+  @media screen and (max-width: 420px) {
+    margin: 10px;
+  }
 }
+</style>
+<style scoped>
 p{ line-height:30px}
 .hljs {
   line-height: 1.8;
-  // font-family: Menlo,Monaco,Consolas,Courier,monospace;
+  /* font-family: Menlo,Monaco,Consolas,Courier,monospace; */
   font-size: 12px;
   padding: 18px 24px;
   background-color: #fafafa;
@@ -69,4 +100,9 @@ p{ line-height:30px}
   -webkit-font-smoothing: auto;
   color:#000
 }
+section {display:flex; flex-direction: column}
+section span {margin: 10px 0}
+section ul{display: flex;}
+section ul li{flex: 0 0 33%; height: 60px; max-width:200px; display: flex; background: #66b1ff; margin:0 2px; color:white; border-radius: 5px}
+section ul li span { margin: auto}
 </style>

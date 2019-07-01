@@ -29,3 +29,16 @@ export function listAllProductByBranch (branchid) {
     }
   })
 }
+
+export function updateFoodCode (branchid, name , categoryName, appFoodCode) {
+  return request({
+    url: '/api/updateFoodCode',
+    method: 'get',
+    params: {
+      branchid,
+      name,
+      categoryName,
+      appFoodCode
+    }
+  })
+}
