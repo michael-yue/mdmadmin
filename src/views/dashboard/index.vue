@@ -13,7 +13,7 @@
       <section class="mt">
         <span>美团</span>
         <ul>
-          <li @click="goLink('/mt/mtUpdateProduct')"><span>美团产品</span></li>
+          <li @click="goLink('/mt/mtProduct')"><span>美团产品</span></li>
           <li @click="goLink('/mt/mtOrderList')"><span>美团订单</span></li>
         </ul>
       </section>

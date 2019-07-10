@@ -131,23 +131,23 @@ export const asyncRouterMap = [
     name: 'mt',
     meta: { title: '美团', icon: 'example', roles: ['branch', 'marketing'] },
     children: [
+      // {
+      //   path: 'mtUpdateProduct',
+      //   name: 'mtUpdateProduct',
+      //   component: () => import('@/views/mt/UpdateMTProduct'),
+      //   meta: { title: '美团产品', icon: 'table', roles: ['branch', 'marketing'] }
+      // },
       {
-        path: 'mtUpdateProduct',
-        name: 'mtUpdateProduct',
-        component: () => import('@/views/mt/UpdateMTProduct'),
-        meta: { title: '美团产品', icon: 'table', roles: ['branch', 'marketing'] }
+        path: 'mtProduct',
+        name: 'mtProduct',
+        component: () => import('@/views/mt/Product'),
+        meta: { title: '美团产品', icon: 'table', roles: [ 'branch', 'marketing'] }
       },
       {
         path: 'mtOrderList',
         name: 'mtOrderList',
         component: () => import('@/views/mt/OrderList'),
         meta: { title: '美团订单', icon: 'tree', roles: ['branch', 'marketing'] }
-      },
-      {
-        path: 'mtProduct',
-        name: 'mtProduct',
-        component: () => import('@/views/mt/Product'),
-        meta: { title: '美团产品(new)', icon: 'table', roles: [ 'marketing'] }
       },
       {
         path: 'mtBindBranch',
