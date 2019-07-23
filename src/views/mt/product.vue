@@ -17,11 +17,11 @@
             <li v-for="product in filteredProducts" :key="product.name">
               <div style="display:flex">
                 <div style="flex: 0 0 30%">
-                  <el-input v-model="product.app_food_code" placeholder="请输入收银代码" size="small" @keyup.enter.native="updateCode(product)"></el-input>
+                  <el-input v-model="product.app_food_code" placeholder="请输入收银代码" size="small" @keyup.enter.native="updateCode(product)" />
                 </div>
                 <div style="flex:1; margin:auto; padding-left:20px; display:flex; justify-content:space-between">
-                  <span>{{ product.name }}</span>  
-                  <span>¥{{product.price}}</span>
+                  <span>{{ product.name }}</span>
+                  <span>¥{{ product.price }}</span>
                 </div>
               </div>
             </li>
@@ -37,11 +37,11 @@ import store from '@/store'
 import SelectBranch from '@/components/widgets/SelectBranch'
 import { listAllCatByBranch, listAllProductByBranch, updateFoodCode } from '@/api/mt.js'
 export default {
-  name: 'product',
+  name: 'Product',
   components: {
     SelectBranch
   },
-  data () {
+  data() {
     return {
       loading: false,
       myHeight: 0,
@@ -50,6 +50,25 @@ export default {
       products: [],
       activeProductType: {},
       filteredProducts: []
+    }
+  },
+  computed: {
+    // filteredProducts: function () {
+    //   return this.products.filter(function (item) {
+    //     return item.category_name === this.activeProductType.name
+    //   });
+    // }
+  },
+  watch: {
+    selectedBranch(val, oldval) {
+      if (val !== 0) {
+        this.retriveData()
+      }
+    },
+    activeProductType(val, oldval) {
+      this.filteredProducts = this.products.filter(function(item) {
+        return item.category_name === val.name
+      })
     }
   },
   mounted() {
@@ -68,30 +87,11 @@ export default {
       this.roleBranch = true
     }
   },
-  computed: {
-    // filteredProducts: function () {
-    //   return this.products.filter(function (item) {
-    //     return item.category_name === this.activeProductType.name
-    //   });
-    // }
-  },
-  watch: {
-    selectedBranch(val, oldval) {
-      if (val !== 0) {
-        this.retriveData()
-      }
-    },
-    activeProductType(val, oldval) {
-      this.filteredProducts = this.products.filter(function (item) {
-        return item.category_name === val.name
-      })
-    }
-  },
   methods: {
     branchChangeEvent: function(event) {
       this.selectedBranch = event.branchId
     },
-    listAllCat: function () {
+    listAllCat: function() {
       var that = this
       listAllCatByBranch(this.selectedBranch).then(response => {
         that.producttypes = response.data
@@ -103,7 +103,7 @@ export default {
         console.log(error)
       })
     },
-    listAllProduct: function () {
+    listAllProduct: function() {
       var that = this
       listAllProductByBranch(this.selectedBranch).then(response => {
         that.products = response.data
@@ -112,7 +112,7 @@ export default {
         console.log(error)
       })
     },
-    retriveData: function () {
+    retriveData: function() {
       var that = this
       listAllCatByBranch(this.selectedBranch).then(response => {
         that.producttypes = response.data
@@ -122,7 +122,7 @@ export default {
         }
         listAllProductByBranch(this.selectedBranch).then(response => {
           that.products = response.data
-          that.filteredProducts = that.products.filter(function (item) {
+          that.filteredProducts = that.products.filter(function(item) {
             return item.category_name === that.activeProductType.name
           })
           that.loading = false
@@ -134,13 +134,13 @@ export default {
         console.log(error)
       })
     },
-    updateCode: function (product) {
+    updateCode: function(product) {
       this.loading = true
       var that = this
       updateFoodCode(this.selectedBranch, product.name, product.category_name, product.app_food_code)
         .then(response => {
           that.products = response.data
-          that.filteredProducts = that.products.filter(function (item) {
+          that.filteredProducts = that.products.filter(function(item) {
             return item.category_name === that.activeProductType.name
           })
           that.loading = false
@@ -148,7 +148,7 @@ export default {
           console.log(error)
         })
     },
-    productTypeselected: function (item) {
+    productTypeselected: function(item) {
       this.activeProductType = item
     }
   }

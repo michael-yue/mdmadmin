@@ -10,7 +10,7 @@ export function bindBranch(branchid) {
   })
 }
 
-export function listAllCatByBranch (branchid) {
+export function listAllCatByBranch(branchid) {
   return request({
     url: '/api/listAllCatByBranch',
     method: 'get',
@@ -20,7 +20,7 @@ export function listAllCatByBranch (branchid) {
   })
 }
 
-export function listAllProductByBranch (branchid) {
+export function listAllProductByBranch(branchid) {
   return request({
     url: '/api/listAllProductByBranch',
     method: 'get',
@@ -30,7 +30,7 @@ export function listAllProductByBranch (branchid) {
   })
 }
 
-export function updateFoodCode (branchid, name , categoryName, appFoodCode) {
+export function updateFoodCode(branchid, name, categoryName, appFoodCode) {
   return request({
     url: '/api/updateFoodCode',
     method: 'get',

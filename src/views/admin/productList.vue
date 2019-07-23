@@ -9,18 +9,18 @@
       <div style="display:flex; flex-direction:row">
         <div class="left">
           <div style="text-align:right">
-            <el-button size="small" @click="showNewProductTypeDialog" style="margin-right:10px">添加</el-button>
+            <el-button size="small" style="margin-right:10px" @click="showNewProductTypeDialog" >添加</el-button>
           </div>
           <ul class="producttypes">
             <li v-for="type in producttypes" :key="type.typeName" :class="{active: activeProductType == type}" @click="productTypeselected(type)">
               <div>{{ type.typeName }}</div>
-              <div @click="showProductTypeDialog(type)"><i class="el-icon-edit"></i></div>
+              <div @click="showProductTypeDialog(type)"><i class="el-icon-edit" /></div>
             </li>
           </ul>
         </div>
         <div class="right">
           <div style="text-align:right">
-            <el-button size="small" @click="showNewProductDialg" style="margin-right:10px">添加</el-button>
+            <el-button size="small" style="margin-right:10px" @click="showNewProductDialg">添加</el-button>
           </div>
           <ul>
             <li v-for="product in filteredProducts" :key="product.name">
@@ -28,11 +28,11 @@
                 <div style="flex:1; margin:auto; padding-left:20px; display:flex; justify-content:space-between">
                   <span style="margin:auto; flex: 0 0 10%">{{ product.productId }}</span>
                   <span style="margin:auto; flex: 0 0 40%">{{ product.productName }}</span>
-                  <span style="margin:auto; flex: 0 0 10%">¥{{product.price}}</span>
-                  <span style="margin:auto; flex: 0 0 10%">{{product.orderSeq}}</span>
+                  <span style="margin:auto; flex: 0 0 10%">¥{{ product.price }}</span>
+                  <span style="margin:auto; flex: 0 0 10%">{{ product.orderSeq }}</span>
                   <span style="margin:auto; flex: 0 0 30%">
-                    <el-button size="small" @click="showProductDialg(product)"><i class="el-icon-edit"></i>修改</el-button>
-                    <el-button size="small" @click="deleteProduct(product)"><i class="el-icon-delete"></i>删除</el-button>
+                    <el-button size="small" @click="showProductDialg(product)"><i class="el-icon-edit" />修改</el-button>
+                    <el-button size="small" @click="deleteProduct(product)"><i class="el-icon-delete" />删除</el-button>
                   </span>
                 </div>
               </div>
@@ -92,7 +92,7 @@
             <el-input v-model="editProductForm.productDesc" size="small" maxlength="20"/>
           </el-form-item>
           <el-form-item label="单价" prop="price">
-              <el-input v-model="editProductForm.price" size="small" maxlength="20"/>
+            <el-input v-model="editProductForm.price" size="small" maxlength="20"/>
           </el-form-item>
           <el-form-item label="显示顺序" prop="orderSeq">
             <el-input v-model="editProductForm.orderSeq" size="small" maxlength="20"/>
@@ -122,11 +122,11 @@ import store from '@/store'
 import ProductTypeSelector from '@/components/widgets/ProductTypeSelector'
 import { listAllProductType, listAllProduct, updateProductType, updateProduct, createProductType, createProduct } from '@/api/product.js'
 export default {
-  name: 'product',
+  name: 'Product',
   components: {
     ProductTypeSelector
   },
-  data () {
+  data() {
     return {
       loading: false,
       myHeight: 0,
@@ -169,23 +169,6 @@ export default {
       }
     }
   },
-  mounted () {
-    const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight // 浏览器高度
-    const critheaderheight = this.$refs.critheader.offsetHeight
-    this.myHeight = (h - critheaderheight - 60) + 'px'
-    var that = this
-    window.onresize = function windowResize () {
-      const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight // 浏览器高度
-      that.myHeight = (h - critheaderheight - 60) + 'px'
-    }
-    this.retrieveData()
-  },
-  created: function () {
-    if (store.getters.roles.includes('branch')) {
-      this.selectedBranch = store.getters.branches
-      this.roleBranch = true
-    }
-  },
   computed: {
     // filteredProducts: function () {
     //   return this.products.filter(function (item) {
@@ -194,22 +177,39 @@ export default {
     // }
   },
   watch: {
-    selectedBranch (val, oldval) {
+    selectedBranch(val, oldval) {
       if (val !== 0) {
         this.retrieveData()
       }
     },
-    activeProductType (val, oldval) {
-      this.filteredProducts = this.products.filter(function (item) {
+    activeProductType(val, oldval) {
+      this.filteredProducts = this.products.filter(function(item) {
         return item.productType.typeId === val.typeId
       })
     }
   },
+  mounted() {
+    const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight // 浏览器高度
+    const critheaderheight = this.$refs.critheader.offsetHeight
+    this.myHeight = (h - critheaderheight - 60) + 'px'
+    var that = this
+    window.onresize = function windowResize() {
+      const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight // 浏览器高度
+      that.myHeight = (h - critheaderheight - 60) + 'px'
+    }
+    this.retrieveData()
+  },
+  created: function() {
+    if (store.getters.roles.includes('branch')) {
+      this.selectedBranch = store.getters.branches
+      this.roleBranch = true
+    }
+  },
   methods: {
-    branchChangeEvent: function (event) {
+    branchChangeEvent: function(event) {
       this.selectedBranch = event.branchId
     },
-    showProductTypeDialog: function (type) {
+    showProductTypeDialog: function(type) {
       this.editProductTypeForm.id = type.id
       this.editProductTypeForm.typeId = type.typeId
       this.editProductTypeForm.typeName = type.typeName
@@ -218,7 +218,7 @@ export default {
       this.dialogProductTypeStatus = 'update'
       this.dialogProductTypeVisible = true
     },
-    showNewProductTypeDialog: function () {
+    showNewProductTypeDialog: function() {
       this.editProductTypeForm = {
         id: 0,
         typeId: '',
@@ -229,7 +229,7 @@ export default {
       this.dialogProductTypeStatus = 'create'
       this.dialogProductTypeVisible = true
     },
-    showNewProductDialg: function () {
+    showNewProductDialg: function() {
       this.editProductForm = {
         id: 0,
         productId: '',
@@ -244,7 +244,7 @@ export default {
       this.dialogProductStatus = 'create'
       this.dialogProductVisible = true
     },
-    showProductDialg: function (product) {
+    showProductDialg: function(product) {
       this.editProductForm.id = product.id
       this.editProductForm.productId = product.productId
       this.editProductForm.productName = product.productName
@@ -256,16 +256,16 @@ export default {
       this.dialogProductStatus = 'update'
       this.dialogProductVisible = true
     },
-    deleteProduct: function () {
+    deleteProduct: function() {
       // delete confirm
     },
-    closeProductTypeDialog: function () {
+    closeProductTypeDialog: function() {
       this.dialogProductTypeVisible = false
     },
-    closeProductDialog: function () {
+    closeProductDialog: function() {
       this.dialogProductVisible = false
     },
-    createProductType: function () {
+    createProductType: function() {
       var param = {
         shopid: store.getters.branches,
         typeid: this.editProductTypeForm.typeId,
@@ -282,7 +282,7 @@ export default {
         console.log(error)
       })
     },
-    updateProductType: function () {
+    updateProductType: function() {
       var param = {
         id: this.editProductTypeForm.id,
         shopid: store.getters.branches,
@@ -300,7 +300,7 @@ export default {
         console.log(error)
       })
     },
-    createProduct: function () {
+    createProduct: function() {
       this.loading = true
       var that = this
       var param = {
@@ -324,7 +324,7 @@ export default {
         console.log(error)
       })
     },
-    updateProduct: function () {
+    updateProduct: function() {
       this.loading = true
       var that = this
       var param = {
@@ -347,7 +347,7 @@ export default {
         console.log(error)
       })
     },
-    listAllCat: function () {
+    listAllCat: function() {
       var that = this
       listAllProductType(this.selectedBranch).then(response => {
         that.producttypes = response.data
@@ -359,7 +359,7 @@ export default {
         console.log(error)
       })
     },
-    listAllProduct: function () {
+    listAllProduct: function() {
       var that = this
       listAllProduct(this.selectedBranch).then(response => {
         that.products = response.data
@@ -368,10 +368,7 @@ export default {
         console.log(error)
       })
     },
-    listAllMemberTyoe: function () {
-      // list all member
-    },
-    retrieveData: function () {
+    retrieveData: function() {
       var that = this
       listAllProductType(this.selectedBranch).then(response => {
         that.producttypes = response.data
@@ -380,7 +377,7 @@ export default {
         }
         listAllProduct(this.selectedBranch).then(response => {
           that.products = response.data
-          that.filteredProducts = that.products.filter(function (item) {
+          that.filteredProducts = that.products.filter(function(item) {
             return item.productType.typeId === that.activeProductType.typeId
           })
           that.loading = false
@@ -392,14 +389,14 @@ export default {
         console.log(error)
       })
     },
-    ProductTypeChangedEvent: function (event) {
+    ProductTypeChangedEvent: function(event) {
       console.log(event)
     },
-    productTypeselected: function (item) {
+    productTypeselected: function(item) {
       console.log(item)
       this.activeProductType = item
     },
-    handleSelect (key, keyPath) {
+    handleSelect(key, keyPath) {
       if (key === '1') {
         this.$router.push('/system/setting')
       } else if (key === '2') {

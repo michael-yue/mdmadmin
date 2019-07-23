@@ -1,55 +1,56 @@
 <template>
   <div class="activityList">
-    <div ref="critheader" class="">
-      <el-button type="primary">新建</el-button>
+    <div ref="critheader" style="display:flex; justify-content: flex-end; padding:5px">
+      <el-button type="primary" size="small" @click="showCreate">新建</el-button>
     </div>
     <el-card :style="{height: myHeight}">
-      <el-table :data="activityList" :header-cell-style="tableheader" border size="small" height="100%">
-        <el-table-column prop="activityId" label="项目" width="150" header-align="center" align="left" />
+      <el-table :data="activityList" size="small" height="100%">
+        <el-table-column prop="activityId" label="代码" width="150" header-align="center" align="left" />
         <el-table-column prop="name" label="名称" width="150" header-align="center" align="left" />
+        <el-table-column prop="sumbmitDeadLine" label="截止日期" width="150" header-align="center" align="left" />
+        <el-table-column prop="note" label="说明" header-align="center" align="left" />
+        <el-table-column prop="status" label="状态" width="100" header-align="center" align="left" />
       </el-table>
     </el-card>
   </div>
 </template>
 
 <script>
-import { listAllActivity } from '@/api/marketing'
+import { listAllActivities } from '@/api/marketing'
 export default {
-  name: 'activityList',
-  data () {
+  name: 'ActivityList',
+  data() {
     return {
       loading: false,
+      myHeight: '',
       activityList: [],
       stauts: 0,
-      name: ''
+      name: '',
+      dialogFormVisible: false
     }
   },
   mounted() {
     const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
     const critheaderheight = this.$refs.critheader.offsetHeight
-    const reportheaderheight = this.$refs.reportheader.offsetHeight
-    this.myHeight = (h - critheaderheight - reportheaderheight - 50) + 'px'
+    this.myHeight = (h - critheaderheight - 50) + 'px'
     var that = this
     window.onresize = function windowResize() {
       const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-      that.myHeight = (h - critheaderheight - reportheaderheight - 50) + 'px'
+      that.myHeight = (h - critheaderheight - 50) + 'px'
     }
   },
-  watch: {
-    status(newval, oldval) {
-      this.listAllActivity()
-    },
-    name(newval, oldval) {
-      this.listAllActivity()
-    }
+  created() {
+    this.listAllActivities()
   },
-  method: {
-    listAllActivity () {
-      listAllActivity(this.status, this.name).then(res => {
+  methods: {
+    listAllActivities() {
+      listAllActivities(this.status, this.name).then(res => {
         this.activityList = res.data
       })
+    },
+    showCreate() {
+      this.dialogFormVisible = true
     }
   }
 }
 </script>
-

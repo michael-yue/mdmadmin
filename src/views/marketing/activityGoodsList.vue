@@ -1,6 +1,6 @@
 <template>
   <div class="activityGoodsList">
-    <div ref="critheader" class="">
+    <div ref="critheader" style="display:flex; justify-content: flex-end; margin:5px">
       <MarketingActivitySelector />
       <el-button type="primary">新建</el-button>
     </div>
@@ -16,37 +16,37 @@
 <script>
 import { listAllGoods } from '@/api/marketing'
 export default {
-  name: 'activityGoodsList',
-  data () {
+  name: 'ActivityGoodsList',
+  data() {
     return {
       loading: false,
+      myHeight: '',
       activityGoodsList: [],
       stauts: 0,
       name: ''
     }
   },
+  watch: {
+    status(newval, oldval) {
+      this.listAllGoods()
+    },
+    name(newval, oldval) {
+      this.listAllGoods()
+    }
+  },
   mounted() {
     const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
     const critheaderheight = this.$refs.critheader.offsetHeight
-    const reportheaderheight = this.$refs.reportheader.offsetHeight
-    this.myHeight = (h - critheaderheight - reportheaderheight - 50) + 'px'
+    this.myHeight = (h - critheaderheight - 50) + 'px'
     var that = this
     window.onresize = function windowResize() {
       const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-      that.myHeight = (h - critheaderheight - reportheaderheight - 50) + 'px'
-    }
-  },
-  watch: {
-    status(newval, oldval) {
-      this.listAllActivity()
-    },
-    name(newval, oldval) {
-      this.listAllActivity()
+      that.myHeight = (h - critheaderheight - 50) + 'px'
     }
   },
   method: {
-    listAllActivity () {
-      listAllActivity(this.status, this.name).then(res => {
+    listAllGoods() {
+      listAllGoods(this.status, this.name).then(res => {
         this.activityList = res.data
       })
     }

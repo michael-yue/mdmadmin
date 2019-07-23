@@ -13,26 +13,15 @@
 </template>
 
 <script>
-import { listAllActivity } from '@/api/marketing'
+import { listAllActivities } from '@/api/marketing'
 export default {
-  name: 'activityList',
-  data () {
+  name: 'ActivityList',
+  data() {
     return {
       loading: false,
       activityList: [],
       stauts: 0,
       name: ''
-    }
-  },
-  mounted() {
-    const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-    const critheaderheight = this.$refs.critheader.offsetHeight
-    const reportheaderheight = this.$refs.reportheader.offsetHeight
-    this.myHeight = (h - critheaderheight - reportheaderheight - 50) + 'px'
-    var that = this
-    window.onresize = function windowResize() {
-      const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-      that.myHeight = (h - critheaderheight - reportheaderheight - 50) + 'px'
     }
   },
   watch: {
@@ -43,9 +32,19 @@ export default {
       this.listAllActivity()
     }
   },
+  mounted() {
+    const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+    const critheaderheight = this.$refs.critheader.offsetHeight
+    this.myHeight = (h - critheaderheight - 50) + 'px'
+    var that = this
+    window.onresize = function windowResize() {
+      const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+      that.myHeight = (h - critheaderheight - 50) + 'px'
+    }
+  },
   method: {
-    listAllActivity () {
-      listAllActivity(this.status, this.name).then(res => {
+    listAllActivity() {
+      listAllActivities(this.status, this.name).then(res => {
         this.activityList = res.data
       })
     }
