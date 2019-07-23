@@ -1,6 +1,7 @@
 <template>
   <div class="activityGoodsList">
     <div ref="critheader" class="">
+      <MarketingActivitySelector />
       <el-button type="primary">新建</el-button>
     </div>
     <el-card :style="{height: myHeight}">
@@ -15,11 +16,11 @@
 <script>
 import { listAllGoods } from '@/api/marketing'
 export default {
-  name: 'activityList',
+  name: 'activityGoodsList',
   data () {
     return {
       loading: false,
-      activityList: [],
+      activityGoodsList: [],
       stauts: 0,
       name: ''
     }
