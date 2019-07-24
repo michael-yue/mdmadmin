@@ -2,14 +2,14 @@ import request from '@/utils/request'
 
 export function listOpenActivities() {
   return request({
-    url: '/api/listOpenActivities',
+    url: '/api/marketing/listOpenActivities',
     method: 'get',
     params: {}
   })
 }
 export function listAllActivities() {
   return request({
-    url: '/api/listAllActivities',
+    url: '/api/marketing/listAllActivities',
     method: 'get',
     params: {}
   })
@@ -17,7 +17,7 @@ export function listAllActivities() {
 
 export function listActivity(status, name) {
   return request({
-    url: '/api/listActivity',
+    url: '/api/marketing/listActivity',
     method: 'get',
     params: {
       status,
@@ -26,13 +26,14 @@ export function listActivity(status, name) {
   })
 }
 
-export function listAllGoods(status, name) {
+export function listAllGoods(activityid, pagenum, pagesize) {
   return request({
-    url: '/api/listActivity',
+    url: '/api/marketing/listAllGoods',
     method: 'get',
     params: {
-      status,
-      name
+      activityid,
+      pagenum,
+      pagesize
     }
   })
 }
