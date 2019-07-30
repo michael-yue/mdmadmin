@@ -236,8 +236,6 @@ export default {
       // const refundnum = Number(row.refundnum)
       this.refundloading = true
       wxRefund(this.selectedBranch, orderid, row.prodid, row.zf, row.refundnum).then(response => {
-        // console.log(response.code)
-        // console.log(response.data)
         this.refundloading = false
         this.dialogDetail = false
         this.retrieveData()

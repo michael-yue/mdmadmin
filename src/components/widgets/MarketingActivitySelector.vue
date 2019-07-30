@@ -12,8 +12,7 @@
 </template>
 
 <script>
-import store from '@/store'
-import { getAllActivites, getOpenActivity } from '@/api/marketing'
+import { listAllActivities, listOpenActivities } from '@/api/marketing'
 export default {
   name: 'SelectActivity',
   props: {
@@ -39,26 +38,20 @@ export default {
     }
   },
   created: function() {
-    const roles = store.getters.roles
-    if (roles.includes('branch')) {
-      this.show = false
-    } else {
-      this.show = true
-      this.retriveActivity()
-    }
+    this.retriveActivity()
   },
   methods: {
     // 这里不对，权限
     retriveActivity: function() {
       var that = this
       if (this.typeclass === 'open') {
-        getOpenActivity().then(response => {
+        listOpenActivities().then(response => {
           that.activities = response.data
         }).catch(error => {
           console.log(error)
         })
       } else if (this.typeclass === 'all') {
-        getAllActivity().then(response => {
+        listAllActivities().then(response => {
           that.activities = response.data
         }).catch(error => {
           console.log(error)

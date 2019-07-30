@@ -1,23 +1,43 @@
 <template>
   <div class="activityList">
-    <div ref="critheader" style="display:flex; justify-content: flex-end; padding:5px">
-      <el-button type="primary" size="small" @click="showCreate">新建</el-button>
+    <div ref="critheader" style="display:flex; justify-content: flex-end; padding:10px 10px 0 0 ">
+      <el-button type="primary" size="small" @click="showCreateDialog">新建</el-button>
     </div>
-    <el-card :style="{height: myHeight}">
-      <el-table :data="activityList" size="small" height="100%">
-        <el-table-column prop="activityId" label="代码" width="150" header-align="center" align="left" />
-        <el-table-column prop="name" label="名称" width="150" header-align="center" align="left" />
-        <el-table-column prop="sumbmitDeadLine" label="截止日期" width="150" header-align="center" align="left" />
-        <el-table-column prop="note" label="说明" header-align="center" align="left" />
-        <el-table-column prop="status" label="状态" width="100" header-align="center" align="left" />
-        <el-table-column prop="id" label="" width="100" header-align="center" align="left">
-          <template slot="id">
-            <el-button size="small" @click="showDialog(id)"><i class="el-icon-edit"></i>修改</el-button>
-            <el-button size="small" @click="deleteActivity(id)"><i class="el-icon-delete"></i>删除</el-button>
+    <el-card style="margin:10px">
+      <el-table :style="{height: myHeight}" :data="activityList" size="small">
+        <el-table-column prop="activityId" label="代码" header-align="left" align="left" />
+        <el-table-column prop="name" label="名称" header-align="left" align="left" />
+        <el-table-column prop="submitDeadLine" label="截止日期" align="left">
+          <template slot-scope="props">
+            <div>{{ props.row.submitDeadLine.time | formatDate }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="status" label="状态" header-align="left" align="left">
+          <template slot-scope="props">
+            <div v-if="props.row.status === '1'">未开始</div>
+            <div v-else-if = "props.row.status === '2'">申报中</div>
+            <div v-else-if = "props.row.status === '3'">结束申报</div>
+            <div v-else-if = "props.row.status === '4'">关闭</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="id" label="" header-align="center" align="left">
+          <template slot-scope="props">
+            <div v-if="props.row.status === '1'">
+              <el-button type="text" size="small" @click="showUpdateDialog(props.row)"><i class="el-icon-edit" />修改</el-button>
+              <el-button type="text" size="small" @click="deleteActivity(props.row)"><i class="el-icon-delete" />删除</el-button>
+              <el-button type="text" size="small" @click="startActivity(props.row)">开始申报</el-button>
+            </div>
+            <div v-else-if="props.row.status === '2'">
+              <el-button type="text" size="small" @click="stopActivity(props.row)">结束申报</el-button>
+            </div>
+            <div v-else-if="props.row.status === '3'">
+              <el-button type="text" size="small" @click="startActivity(props.row)">重开始申报</el-button>
+              <el-button type="text" size="small" @click="closeActivity(props.row)">关闭</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
-      <div style="margin-top:10px; text-align: right">
+      <div style="margin-top:10px; text-align: right;">
         <el-pagination
           :current-page="currentPage"
           :page-size="limit"
@@ -32,28 +52,25 @@
       :fullscreen="false"
       :modal="true"
       :show-close="false"
-      :loading="refundloading"
+      :loading="loadingForm"
       title="活动信息"
       top="5vh">
       <div>
         <el-form ref="editForm" :model="editForm" :rules="editFormRules" label-width="120px">
-          <el-form-item label="编码" prop="typeId">
-            <el-input v-model="editForm.typeId" size="small" maxlength="20"/>
+          <el-form-item label="编码" prop="activityId">
+            <el-input v-model="editForm.activityId" size="small" maxlength="20"/>
           </el-form-item>
-          <el-form-item label="名称" prop="typeName">
-            <el-input v-model="editForm.typeName" size="small" maxlength="20"/>
+          <el-form-item label="名称" prop="name">
+            <el-input v-model="editForm.name" size="small" maxlength="20"/>
           </el-form-item>
-          <el-form-item label="截止日期" prop="orderSeq">
-            <el-input v-model="editForm.orderSeq" size="small" maxlength="20"/>
-          </el-form-item>
-          <el-form-item label="状态" prop="status">
-            <el-radio-group v-model="editForm.status">
-              <el-radio label="1">在售</el-radio>
-              <el-radio label="0">停售</el-radio>
-            </el-radio-group>
+          <el-form-item label="截止日期" prop="submitDeadLine">
+            <el-date-picker
+              v-model="editForm.submitDeadLine"
+              type="date"
+              placeholder="选择日期" />
           </el-form-item>
           <el-form-item label="说明" prop="note">
-            <el-input v-model="editForm.note" size="small" maxlength="20"/>
+            <el-input v-model="editForm.note" size="small" type="textarea" />
           </el-form-item>
         </el-form>
       </div>
@@ -67,31 +84,45 @@
 </template>
 
 <script>
-import { listAllActivities } from '@/api/marketing'
+import { listAllActivities, createActivity, updateActivity, startActivity, stopActivity, closeActivity } from '@/api/marketing'
+import { parseTime } from '@/utils'
 export default {
   name: 'ActivityList',
+  filters: {
+    formatDate(time) {
+      const date = new Date(time)
+      return parseTime(date, '{y}-{m}-{d}')
+    }
+  },
   data() {
     return {
       loading: false,
       myHeight: '',
       activityList: [],
       stauts: 0,
+      currentPage: 1,
+      limit: 10,
+      totalcount: 0,
       name: '',
       dialogFormVisible: false,
       dialogFormStatus: '',
       editForm: {},
-      pagenum: 1,
-      pagesize: 10
+      loadingForm: false,
+      editFormRules: {
+        activityId: [{ required: true, message: '请输入代码', trigger: 'blur' }],
+        name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+        submitDeadLine: [{ required: true, message: '请输入截止日期', trigger: 'blur' }]
+      }
     }
   },
   mounted() {
     const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
     const critheaderheight = this.$refs.critheader.offsetHeight
-    this.myHeight = (h - critheaderheight - 50) + 'px'
+    this.myHeight = (h - critheaderheight - 150) + 'px'
     var that = this
     window.onresize = function windowResize() {
       const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-      that.myHeight = (h - critheaderheight - 50) + 'px'
+      that.myHeight = (h - critheaderheight - 150) + 'px'
     }
   },
   created() {
@@ -99,26 +130,110 @@ export default {
   },
   methods: {
     listAllActivities() {
-      listAllActivities(this.pagenum, this.pagesize).then(res => {
+      listAllActivities(this.currentPage, this.limit).then(res => {
         this.activityList = res.data
+        console.log(this.activityList)
       })
     },
-    showCreate() {
+    showCreateDialog() {
+      this.dialogFormStatus = 'create'
+      this.dialogFormVisible = true
+    },
+    showUpdateDialog(item) {
+      this.editForm = item
+      this.editForm.submitDeadLine = new Date(item.submitDeadLine.time)
+      console.log(this.editForm.submitDeadLine)
+      this.dialogFormStatus = 'update'
       this.dialogFormVisible = true
     },
     closeFormDialog() {
       this.dialogFormVisible = false
     },
     createActivity() {
-      console.log('create')
+      this.$refs.editForm.validate(valid => {
+        if (valid) {
+          this.$confirm('确认提交吗？', '提示', {})
+            .then(() => {
+              const para = Object.assign({}, this.editForm)
+              this.loadingForm = true
+              createActivity(para).then(res => {
+                if (res.code === 20000) {
+                  this.$message({
+                    message: '提交成功',
+                    type: 'success'
+                  })
+                }
+                this.$refs['editForm'].resetFields()
+                this.loadingForm = false
+                this.listAllActivities()
+                this.dialogFormVisible = false
+              })
+            })
+            .catch(e => {
+              console.log(e)
+            })
+        }
+      })
     },
     updateActivity() {
-      console.log('create')
+      this.$refs.editForm.validate(valid => {
+        if (valid) {
+          this.$confirm('确认提交吗？', '提示', {})
+            .then(() => {
+              const para = Object.assign({}, this.editForm)
+              this.loadingForm = true
+              updateActivity(para).then(res => {
+                if (res.code === 20000) {
+                  this.$message({
+                    message: '提交成功',
+                    type: 'success'
+                  })
+                }
+                this.$refs['editForm'].resetFields()
+                this.loadingForm = false
+                this.listAllActivities()
+                this.dialogFormVisible = false
+              })
+            })
+            .catch(e => {
+              console.log(e)
+            })
+        }
+      })
     },
-    showDialog(item) {
-      this.dialogFormStatus = 'update'
-      this.dialogFormVisible = true
+    startActivity(row) {
+      var param = { activityId: row.id }
+      startActivity(param).then(res => {
+        console.log(res)
+        this.listAllActivities()
+      })
+    },
+    stopActivity(row) {
+      var param = { activityId: row.id }
+      stopActivity(param).then(res => {
+        console.log(res)
+        this.listAllActivities()
+      })
+    },
+    closeActivity(row) {
+      var param = { activityId: row.id }
+      closeActivity(param).then(res => {
+        console.log(res)
+        this.listAllActivities()
+      })
+    },
+    // 分页处理
+    pagechange: function(currentPage) {
+      this.currentPage = currentPage
+      this.retrieveData()
+    },
+    handleSizeChange: function(currentSize) {
+      this.limit = currentSize
+      this.retrieveData()
     }
   }
 }
 </script>
+<style scoped>
+.el-card >>> .el-card__body {height: 100%}
+</style>

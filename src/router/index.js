@@ -240,25 +240,32 @@ export const asyncRouterMap = [
   {
     path: '/marketing',
     component: Layout,
-    meta: { title: '市场活动', icon: 'example', roles: ['admin'] },
+    meta: { title: '市场活动', icon: 'example', roles: ['admin', 'marketing', 'branch'] },
     children: [
       {
         path: 'activityList',
         name: 'activityList',
         component: () => import('@/views/marketing/activityList'),
-        meta: { title: '活动设置', icon: 'table', roles: ['admin'] }
+        meta: { title: '活动设置', icon: 'table', roles: ['admin', 'marketing'] }
       },
       {
         path: 'activityGoodsList',
         name: 'activityGoodsList',
         component: () => import('@/views/marketing/activityGoodsList'),
-        meta: { title: '活动宣传品设置', icon: 'table', roles: ['admin'] }
+        meta: { title: '活动宣传品', icon: 'table', roles: ['admin', 'marketing'] }
       },
       {
         path: 'activityReportSummary',
         name: 'activityReportSummary',
         component: () => import('@/views/marketing/activityReportSummary'),
-        meta: { title: '活动宣传品统计', icon: 'table', roles: ['admin'] }
+        meta: { title: '活动宣传品统计', icon: 'table', roles: ['admin', 'marketing'] }
+      },
+
+      {
+        path: 'branchGoodsMaintain',
+        name: 'branchGoodsMaintain',
+        component: () => import('@/views/marketing/branchGoodsMaintain'),
+        meta: { title: '宣传品申请', icon: 'table', roles: ['admin', 'branch'] }
       }
     ]
   },
