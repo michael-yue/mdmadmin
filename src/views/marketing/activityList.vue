@@ -67,7 +67,9 @@
             <el-date-picker
               v-model="editForm.submitDeadLine"
               type="date"
-              placeholder="选择日期" />
+              placeholder="选择日期"
+              format="yyyy 年 MM 月 dd 日"
+              value-format="yyyy-MM-dd"/>
           </el-form-item>
           <el-form-item label="说明" prop="note">
             <el-input v-model="editForm.note" size="small" type="textarea" />
@@ -118,11 +120,11 @@ export default {
   mounted() {
     const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
     const critheaderheight = this.$refs.critheader.offsetHeight
-    this.myHeight = (h - critheaderheight - 150) + 'px'
+    this.myHeight = (h - critheaderheight - 160) + 'px'
     var that = this
     window.onresize = function windowResize() {
       const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-      that.myHeight = (h - critheaderheight - 150) + 'px'
+      that.myHeight = (h - critheaderheight - 160) + 'px'
     }
   },
   created() {
@@ -130,9 +132,11 @@ export default {
   },
   methods: {
     listAllActivities() {
+      this.loading = true
       listAllActivities(this.currentPage, this.limit).then(res => {
-        this.activityList = res.data
-        console.log(this.activityList)
+        this.activityList = res.data.activityList
+        this.totalcount = res.data.totalcount
+        this.loading = false
       })
     },
     showCreateDialog() {
@@ -140,9 +144,14 @@ export default {
       this.dialogFormVisible = true
     },
     showUpdateDialog(item) {
-      this.editForm = item
-      this.editForm.submitDeadLine = new Date(item.submitDeadLine.time)
-      console.log(this.editForm.submitDeadLine)
+      this.editForm.activityId = item.activityId
+      this.editForm.name = item.name
+      this.editForm.note = item.note
+      console.log(item.submitDeadLine)
+      var date = new Date(item.submitDeadLine)
+      console.log(date)
+      console.log(parseTime(date, '{y}-{m}-{d}'))
+      this.editForm.submitDeadLine = parseTime(date, '{y}-{m}-{d}')
       this.dialogFormStatus = 'update'
       this.dialogFormVisible = true
     },

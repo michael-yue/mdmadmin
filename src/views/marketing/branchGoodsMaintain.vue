@@ -15,7 +15,7 @@
         <el-table-column prop="qty" label="数量" header-align="left" align="left">
           <template slot-scope="props">
             <!-- <el-input v-focus-next-on-enter v-model= "props.row.qty" :ref= "props.row.qty" size="mini" @focus="focus($event)" @keyup.enter.native="updateQty(props.row)"/> -->
-            <el-input v-model="props.row.qty" size="small" @keyup.enter.native="updateCode(props.row)" />
+            <el-input v-focus-next-on-enter v-model="props.row.qty" size="small" @keyup.enter.native="updateQty(props.row)" @focus="focus($event)" />
           </template>
         </el-table-column>
       </el-table>
@@ -31,6 +31,26 @@ export default {
   name: 'BranchGoodsList',
   components: {
     MarketingActivitySelector
+  },
+  directives: {
+    focusNextOnEnter: {
+      bind: function(el, { value }, vnode) {
+        el.addEventListener('keyup', (ev) => {
+          if (ev.keyCode === 13) {
+            // console.log('------------------------vnode-------------')
+            // console.log(vnode)
+            // console.log(value)
+            const nextInput = vnode.context.$refs[value]
+            // const nextInput = vnode.elm
+            console.log(nextInput)
+            if (nextInput && typeof nextInput.focus === 'function') {
+              nextInput.focus()
+              nextInput.select()
+            }
+          }
+        })
+      }
+    }
   },
   data() {
     return {
@@ -74,9 +94,19 @@ export default {
     ActivityChanged(event) {
       this.selectActivityId = event.activityId
     },
+    focus: function(event) {
+      console.log(event)
+      event.currentTarget.select()
+    },
     updateQty(item) {
       console.log(item)
-      saveBranchGoods(item.qty).then(res => {
+      var param = {
+        activityId: this.selectActivityId,
+        goodsId: item.goods.id,
+        qty: item.qty
+      }
+      console.log(param)
+      saveBranchGoods(param).then(res => {
         this.goodsList = res.data
       })
     }

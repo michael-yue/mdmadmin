@@ -123,6 +123,7 @@ export default {
       loading: false,
       myHeight: '',
       goodsList: [],
+      totalcount: 0,
       currentPage: 1,
       limit: 10,
       selectActivityId: 0,
@@ -154,7 +155,8 @@ export default {
   methods: {
     listAllGoods() {
       listAllGoods(this.selectActivityId, this.currentPage, this.limit).then(res => {
-        this.goodsList = res.data
+        this.goodsList = res.data.goodsList
+        this.totalcount = res.data.totalcount
       })
     },
     ActivityChanged(event) {
