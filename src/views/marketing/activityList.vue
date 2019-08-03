@@ -63,16 +63,22 @@
           <el-form-item label="名称" prop="name">
             <el-input v-model="editForm.name" size="small" maxlength="20"/>
           </el-form-item>
-          <el-form-item label="截止日期" prop="submitDeadLine">
+          <!-- <el-form-item label="截止日期" prop="submitDeadLine">
             <el-date-picker
               v-model="editForm.submitDeadLine"
+              type="date"
+              placeholder="选择日期"/>
+          </el-form-item> -->
+          <el-form-item label="截止日期" prop="submitDeadLine1">
+            <el-date-picker
+              v-model="submitDeadLine1"
               type="date"
               placeholder="选择日期"
               format="yyyy 年 MM 月 dd 日"
               value-format="yyyy-MM-dd"/>
           </el-form-item>
           <el-form-item label="说明" prop="note">
-            <el-input v-model="editForm.note" size="small" type="textarea" />
+            <el-input v-model="editForm.note" :rows="3" size="small" type="textarea" />
           </el-form-item>
         </el-form>
       </div>
@@ -91,6 +97,8 @@ import { parseTime } from '@/utils'
 export default {
   name: 'ActivityList',
   filters: {
+    // format="yyyy 年 MM 月 dd 日"
+    // value-format="yyyy-MM-dd"
     formatDate(time) {
       const date = new Date(time)
       return parseTime(date, '{y}-{m}-{d}')
@@ -112,9 +120,10 @@ export default {
       loadingForm: false,
       editFormRules: {
         activityId: [{ required: true, message: '请输入代码', trigger: 'blur' }],
-        name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
-        submitDeadLine: [{ required: true, message: '请输入截止日期', trigger: 'blur' }]
-      }
+        name: [{ required: true, message: '请输入名称', trigger: 'blur' }]
+        // submitDeadLine: [{ required: true, message: '请输入截止日期', trigger: 'blur' }]
+      },
+      submitDeadLine1: ''
     }
   },
   mounted() {
@@ -134,24 +143,30 @@ export default {
     listAllActivities() {
       this.loading = true
       listAllActivities(this.currentPage, this.limit).then(res => {
-        this.activityList = res.data.activityList
-        this.totalcount = res.data.totalcount
+        this.activityList = res.data
+        this.totalcount = res.totalcount
         this.loading = false
       })
     },
     showCreateDialog() {
+      this.editForm.id = 0
+      // this.editForm.activityId = ''
+      this.editForm.name = ''
+      this.editForm.note = ''
+      this.editForm.status = 0
+      this.submitDeadLine1 = ''
       this.dialogFormStatus = 'create'
       this.dialogFormVisible = true
     },
     showUpdateDialog(item) {
+      this.editForm.id = item.id
       this.editForm.activityId = item.activityId
       this.editForm.name = item.name
       this.editForm.note = item.note
-      console.log(item.submitDeadLine)
-      var date = new Date(item.submitDeadLine)
-      console.log(date)
-      console.log(parseTime(date, '{y}-{m}-{d}'))
-      this.editForm.submitDeadLine = parseTime(date, '{y}-{m}-{d}')
+      this.editForm.status = item.status
+      var date = new Date(item.submitDeadLine.time)
+      // this.editForm.submitDeadLine = date
+      this.submitDeadLine1 = date
       this.dialogFormStatus = 'update'
       this.dialogFormVisible = true
     },
@@ -165,6 +180,7 @@ export default {
             .then(() => {
               const para = Object.assign({}, this.editForm)
               this.loadingForm = true
+              para.submitDeadLine = this.submitDeadLine1
               createActivity(para).then(res => {
                 if (res.code === 20000) {
                   this.$message({
@@ -190,6 +206,7 @@ export default {
           this.$confirm('确认提交吗？', '提示', {})
             .then(() => {
               const para = Object.assign({}, this.editForm)
+              para.submitDeadLine = this.submitDeadLine1
               this.loadingForm = true
               updateActivity(para).then(res => {
                 if (res.code === 20000) {

@@ -2,7 +2,9 @@
   <div class="activityGoodsList">
     <div ref="critheader" style="display:flex; justify-content: space-between; margin:5px; padding: 10px 10px 0 0 ">
       <MarketingActivitySelector typeclass="all" @ActivityChanged="ActivityChanged" />
-      <el-button size="small" type="primary" @click="goCreate">新建</el-button>
+      <div v-if="!activied">
+        <el-button size="small" type="primary" @click="goCreate">新建</el-button>
+      </div>
     </div>
     <el-card style="margin:10px">
       <el-table :style="{height: myHeight}" :data="goodsList" size="small" >
@@ -14,8 +16,10 @@
         <el-table-column prop="price" label="单价" header-align="left" align="left" />
         <el-table-column prop="id" label="" header-align="center" align="left">
           <template slot-scope="props">
-            <el-button type="text" size="small" @click="edit(props.row)"><i class="el-icon-edit" />修改</el-button>
-            <el-button type="text" size="small" @click="deleteGoods(props.row)"><i class="el-icon-delete" />删除</el-button>
+            <div v-if="!activied">
+              <el-button type="text" size="small" @click="edit(props.row)"><i class="el-icon-edit" />修改</el-button>
+              <el-button type="text" size="small" @click="deleteGoods(props.row)"><i class="el-icon-delete" />删除</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -78,8 +82,15 @@
           </el-row>
           <el-form-item label="图片" prop="image">
             <!-- <el-input v-model="editForm.image" size="small" type="textarea" /> -->
-            <el-upload :auto-upload="false" action="#" list-type="picture-card">
-              <i slot="default" class="el-icon-plus" />
+            <el-upload
+              :on-success="handleSuccess"
+              :before-upload="beforeUpload"
+              :file-list="filelist"
+              :data="imgdata"
+              :limit="3"
+              action="http://mdm.cchkxx.com/api/marketing/uploadGoodsImages"
+              list-type="picture-card">
+              <!-- <i slot="default" class="el-icon-plus" :auto-upload="false"/>
               <div slot="file" slot-scope="{file}">
                 <img :src="file.url" class="el-upload-list__item-thumbnail" alt="">
                 <span class="el-upload-list__item-actions">
@@ -93,11 +104,12 @@
                     <i class="el-icon-delete" />
                   </span>
                 </span>
-              </div>
+              </div> -->
+              <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </el-form-item>
           <el-form-item label="说明" prop="note">
-            <el-input v-model="editForm.note" size="small" type="textarea" />
+            <el-input v-model="editForm.note" :rows="3" size="small" type="textarea" />
           </el-form-item>
         </el-form>
       </div>
@@ -111,7 +123,7 @@
 </template>
 
 <script>
-import { listAllGoods, createGoods, updateGoods } from '@/api/marketing'
+import { listAllGoods, createGoods, updateGoods, deleteGoods } from '@/api/marketing'
 import MarketingActivitySelector from '@/components/widgets/MarketingActivitySelector'
 export default {
   name: 'ActivityGoodsList',
@@ -131,10 +143,14 @@ export default {
       dialogFormVisible: false,
       dialogFormStatus: '',
       editForm: {},
+      activied: false,
       editFormRules: {
         goodsId: [{ required: true, message: '请输入代码', trigger: 'blur' }],
         name: [{ required: true, message: '请输入名称', trigger: 'blur' }]
-      }
+      },
+      filelist: [],
+      filelisturl: [],
+      imgdata: {}
     }
   },
   watch: {
@@ -155,15 +171,19 @@ export default {
   methods: {
     listAllGoods() {
       listAllGoods(this.selectActivityId, this.currentPage, this.limit).then(res => {
-        this.goodsList = res.data.goodsList
-        this.totalcount = res.data.totalcount
+        this.goodsList = res.data
+        this.activied = res.activied
+        this.totalcount = res.totalcount
       })
     },
     ActivityChanged(event) {
       this.selectActivityId = event.activityId
     },
     goCreate() {
-      // this.$router.push({ path: 'activityGoodsEdit', query: { goods: null }})
+      if (this.selectActivityId === 0) {
+        this.$message.error('需要先选择一活动')
+        return false
+      }
       this.editForm = {
         goodsId: '',
         name: '',
@@ -173,12 +193,35 @@ export default {
         price: '',
         note: ''
       }
+      this.filelist = []
       this.dialogFormStatus = 'create'
       this.dialogFormVisible = true
     },
     edit(item) {
       console.log(item)
       this.editForm = item
+      console.log(item.image1)
+      console.log(item.image2)
+      console.log(item.image3)
+      this.filelist = []
+      if (item.image1 !== '') {
+        var image1 = { name: 'image1', url: item.image1 }
+        this.filelist.push(image1)
+      }
+      if (item.image2 !== '') {
+        const image2 = { name: 'image2', url: item.image2 }
+        this.filelist.push(image2)
+      }
+      if (item.image3 !== '') {
+        var image3 = { name: 'image3', url: item.image3 }
+        this.filelist.push(image3)
+      }
+      // var image1 = {name: 'image1', url: item.image1}
+      // var image1 = {name: 'image1', url: item.image1}
+      // this.filelist.push(image1)
+      // this.filelist.push(image2)
+      // this.filelist.push(image3)
+      // this.filelist = [{ name: 'image1', url: item.image1 }, { name: 'image2', url: item.image2 }, { name: 'image3', url: item.image3 }]
       this.dialogFormStatus = 'update'
       this.dialogFormVisible = true
     },
@@ -191,6 +234,19 @@ export default {
     handlePreview(file) {
       console.log(file)
     },
+    beforeUpload(file) {
+      // this.filelist.append('file', file)
+      // console.log(this.filelist)
+      // return false
+    },
+    handleSuccess(response, file, filelist) {
+      if (response.code === 20000) {
+        console.log(response.url)
+        var image = { image: response.url }
+        this.filelisturl.push(image)
+        console.log(this.filelisturl)
+      }
+    },
     createGoods() {
       this.$refs.editForm.validate(valid => {
         if (valid) {
@@ -198,6 +254,7 @@ export default {
             .then(() => {
               const para = Object.assign({}, this.editForm)
               para.activityId = this.selectActivityId
+              para.filelist = this.filelisturl
               this.loadingForm = true
               createGoods(para).then(res => {
                 if (res.code === 20000) {
@@ -207,6 +264,7 @@ export default {
                   })
                 }
                 this.$refs['editForm'].resetFields()
+                this.filelisturl = []
                 this.loadingForm = false
                 this.listAllGoods()
                 this.dialogFormVisible = false
@@ -224,6 +282,7 @@ export default {
           this.$confirm('确认提交吗？', '提示', {})
             .then(() => {
               const para = Object.assign({}, this.editForm)
+              para.filelist = this.filelisturl
               this.loadingForm = true
               updateGoods(para).then(res => {
                 if (res.code === 20000) {
@@ -245,7 +304,21 @@ export default {
       })
     },
     deleteGoods(item) {
-      console.log(item)
+      this.$confirm('确认删除吗？', '提示', {})
+        .then(() => {
+          deleteGoods(item.id).then(res => {
+            if (res.code === 20000) {
+              this.$message({
+                message: '删除成功',
+                type: 'success'
+              })
+            }
+            this.listAllGoods()
+          })
+        })
+        .catch(e => {
+          console.log(e)
+        })
     },
     // 分页处理
     pagechange: function(currentPage) {

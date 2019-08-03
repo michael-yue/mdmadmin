@@ -2,7 +2,7 @@
   <div class="branchGoodsList">
     <div ref="critheader" style="display:flex; justify-content: space-between; margin:5px; padding: 10px 10px 0 0 ">
       <MarketingActivitySelector typeclass="open" @ActivityChanged="ActivityChanged" />
-      <!-- <el-button size="small" type="primary" @click="query">查询</el-button> -->
+      <el-button size="small" type="primary" @click="save">保存</el-button>
     </div>
     <el-card :style="{height: myHeight}" style="margin:10px">
       <el-table :data="goodsList" size="small">
@@ -15,11 +15,41 @@
         <el-table-column prop="qty" label="数量" header-align="left" align="left">
           <template slot-scope="props">
             <!-- <el-input v-focus-next-on-enter v-model= "props.row.qty" :ref= "props.row.qty" size="mini" @focus="focus($event)" @keyup.enter.native="updateQty(props.row)"/> -->
-            <el-input v-focus-next-on-enter v-model="props.row.qty" size="small" @keyup.enter.native="updateQty(props.row)" @focus="focus($event)" />
+            <div v-if="activied === true">
+              <el-input v-focus-next-on-enter v-model="props.row.qty" :ref= "props.row.goods.goodsId" size="small" @focus="focus($event)" />
+            </div>
+            <div v-else>
+              {{ props.row.qty }}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="goods.price" label="图片" header-align="left" align="left">
+          <template slot-scope="props">
+            <div v-if="hasImage(props.row.goods)">
+              <el-button type="text" size="small" @click="showImage(props.row)">查看</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
+    <el-dialog
+      :visible.sync="dialogImageVisible"
+      :fullscreen="false"
+      :modal="true"
+      :show-close="false"
+      :loading="loadingImageDialog"
+      title="图片"
+      top="5vh">
+      <div>
+        <img :src="image1" class="img" alt="">
+        <img :src="image2" class="img" alt="">
+        <img :src="image3" class="img" alt="">
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="medium" @click="closeImageForm">取 消</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -38,8 +68,8 @@ export default {
         el.addEventListener('keyup', (ev) => {
           if (ev.keyCode === 13) {
             // console.log('------------------------vnode-------------')
-            // console.log(vnode)
-            // console.log(value)
+            console.log(vnode)
+            console.log(value)
             const nextInput = vnode.context.$refs[value]
             // const nextInput = vnode.elm
             console.log(nextInput)
@@ -58,7 +88,13 @@ export default {
       myHeight: '',
       goodsList: [],
       selectActivityId: 0,
-      selectedBranch: ''
+      selectedBranch: '',
+      activied: false,
+      dialogImageVisible: false,
+      loadingImageDialog: false,
+      image1: '',
+      image2: '',
+      image3: ''
     }
   },
   watch: {
@@ -88,6 +124,7 @@ export default {
       this.loading = true
       listAllGoodsByBranch(this.selectedBranch, this.selectActivityId).then(res => {
         this.goodsList = res.data
+        this.activied = res.activied
         this.loading = false
       })
     },
@@ -98,12 +135,28 @@ export default {
       console.log(event)
       event.currentTarget.select()
     },
-    updateQty(item) {
+    hasImage(goods) {
+      if (goods.image1 !== '' || goods.image2 !== '' || goods.image3 !== '') {
+        return true
+      } else {
+        return false
+      }
+    },
+    showImage(item) {
       console.log(item)
+      this.image1 = item.goods.image1
+      this.image2 = item.goods.image2
+      this.image3 = item.goods.image3
+      this.dialogImageVisible = true
+    },
+    closeImageForm() {
+      this.dialogImageVisible = false
+    },
+    save() {
       var param = {
         activityId: this.selectActivityId,
-        goodsId: item.goods.id,
-        qty: item.qty
+        branchId: store.getters.branches,
+        goodsqty: this.goodsList
       }
       console.log(param)
       saveBranchGoods(param).then(res => {
@@ -113,3 +166,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.img {
+  width:100%
+}
+</style>

@@ -110,6 +110,16 @@ export function updateGoods(param) {
   })
 }
 
+export function deleteGoods(id) {
+  return request({
+    url: '/api/marketing/deleteGoods',
+    method: 'get',
+    params: {
+      id
+    }
+  })
+}
+
 export function listActivitiesReport(activityId) {
   return request({
     url: '/api/marketing/listActivitiesReport',
