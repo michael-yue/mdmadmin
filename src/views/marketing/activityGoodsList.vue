@@ -1,7 +1,7 @@
 <template>
   <div class="activityGoodsList">
     <div ref="critheader" style="display:flex; justify-content: space-between; margin:5px; padding: 10px 10px 0 0 ">
-      <MarketingActivitySelector typeclass="all" @ActivityChanged="ActivityChanged" />
+      <MarketingActivitySelector typeclass="notclosed" @ActivityChanged="ActivityChanged" />
       <div v-if="!activied">
         <el-button size="small" type="primary" @click="goCreate">新建</el-button>
       </div>
@@ -90,21 +90,6 @@
               :limit="3"
               action="http://mdm.cchkxx.com/api/marketing/uploadGoodsImages"
               list-type="picture-card">
-              <!-- <i slot="default" class="el-icon-plus" :auto-upload="false"/>
-              <div slot="file" slot-scope="{file}">
-                <img :src="file.url" class="el-upload-list__item-thumbnail" alt="">
-                <span class="el-upload-list__item-actions">
-                  <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
-                    <i class="el-icon-zoom-in" />
-                  </span>
-                  <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleDownload(file)">
-                    <i class="el-icon-download" />
-                  </span>
-                  <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove(file)">
-                    <i class="el-icon-delete" />
-                  </span>
-                </span>
-              </div> -->
               <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </el-form-item>
@@ -198,11 +183,7 @@ export default {
       this.dialogFormVisible = true
     },
     edit(item) {
-      console.log(item)
       this.editForm = item
-      console.log(item.image1)
-      console.log(item.image2)
-      console.log(item.image3)
       this.filelist = []
       if (item.image1 !== '') {
         var image1 = { name: 'image1', url: item.image1 }
@@ -216,12 +197,6 @@ export default {
         var image3 = { name: 'image3', url: item.image3 }
         this.filelist.push(image3)
       }
-      // var image1 = {name: 'image1', url: item.image1}
-      // var image1 = {name: 'image1', url: item.image1}
-      // this.filelist.push(image1)
-      // this.filelist.push(image2)
-      // this.filelist.push(image3)
-      // this.filelist = [{ name: 'image1', url: item.image1 }, { name: 'image2', url: item.image2 }, { name: 'image3', url: item.image3 }]
       this.dialogFormStatus = 'update'
       this.dialogFormVisible = true
     },

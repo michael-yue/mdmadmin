@@ -12,12 +12,15 @@ import App from './App'
 import router from './router'
 import store from './store'
 
+// import * as socketApi from '@/utils/socket'
+
 import '@/icons' // icon
 import '@/permission' // permission control
 
 Vue.use(ElementUI, { locale })
 
 Vue.config.productionTip = false
+// Vue.prototype.socketApi = socketApi
 
 new Vue({
   el: '#app',

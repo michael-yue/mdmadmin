@@ -1,7 +1,7 @@
 <template>
   <div class="activityList">
     <div ref="critheader" style="display:flex; justify-content: space-between;margin:10px">
-      <MarketingActivitySelector typeclass="all" @ActivityChanged="ActivityChanged" />
+      <MarketingActivitySelector typeclass="notclosed" @ActivityChanged="ActivityChanged" />
       <div>
         <el-button type="primary" size="small" @click="query">查询</el-button>
         <el-button :loading="downloading" type="primary" size="small" icon="document" @click="handleDownload">导出excel</el-button>

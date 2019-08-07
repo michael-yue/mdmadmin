@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { listAllActivities, listOpenActivities } from '@/api/marketing'
+import { listAllActivities, listNotClosedActivities, listOpenActivities } from '@/api/marketing'
 export default {
   name: 'SelectActivity',
   props: {
@@ -52,6 +52,12 @@ export default {
         })
       } else if (this.typeclass === 'all') {
         listAllActivities().then(response => {
+          that.activities = response.data
+        }).catch(error => {
+          console.log(error)
+        })
+      } else if (this.typeclass === 'notclosed') {
+        listNotClosedActivities().then(response => {
           that.activities = response.data
         }).catch(error => {
           console.log(error)

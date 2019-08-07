@@ -132,7 +132,6 @@ export default {
       this.selectActivityId = event.activityId
     },
     focus: function(event) {
-      console.log(event)
       event.currentTarget.select()
     },
     hasImage(goods) {
@@ -158,9 +157,13 @@ export default {
         branchId: store.getters.branches,
         goodsqty: this.goodsList
       }
-      console.log(param)
       saveBranchGoods(param).then(res => {
-        this.goodsList = res.data
+        if (res.code === 20000) {
+          this.$message({
+            message: '提交成功',
+            type: 'success'
+          })
+        }
       })
     }
   }

@@ -21,6 +21,11 @@ export default {
     AppMain
   },
   mixins: [ResizeMixin],
+  data() {
+    return {
+      agentData: null
+    }
+  },
   computed: {
     sidebar() {
       return this.$store.state.app.sidebar
@@ -37,9 +42,15 @@ export default {
       }
     }
   },
+  mounted() {
+    this.sockApi.sendSock(this.agentData, this.getSocketData)
+  },
   methods: {
     handleClickOutside() {
       this.$store.dispatch('CloseSideBar', { withoutAnimation: false })
+    },
+    getSocketData(data) {
+      console.log(data)
     }
   }
 }

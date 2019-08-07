@@ -70,7 +70,7 @@ export const asyncRouterMap = [
     path: '/sales',
     component: Layout,
     name: 'sales',
-    meta: { title: '营运报表', icon: 'example', roles: ['finance', 'marketing', 'branch'] },
+    meta: { title: '营运报表', icon: 'money', roles: ['finance', 'marketing', 'branch'] },
     children: [
       {
         path: 'cashreport',
@@ -148,19 +148,19 @@ export const asyncRouterMap = [
         name: 'mtOrderList',
         component: () => import('@/views/mt/OrderList'),
         meta: { title: '美团订单', icon: 'tree', roles: ['branch', 'marketing'] }
-      },
-      {
-        path: 'mtBindBranch',
-        name: 'mtBindBranch',
-        component: () => import('@/views/mt/bindBranch'),
-        meta: { title: '绑定门店', icon: 'table', roles: ['admin', 'marketing1'] }
-      },
-      {
-        path: 'mtunBindBranch',
-        name: 'mtunBindBranch',
-        component: () => import('@/views/mt/unbindBranch'),
-        meta: { title: '门店解绑', icon: 'table', roles: ['admin', 'marketing1'] }
       }
+      // {
+      //   path: 'mtBindBranch',
+      //   name: 'mtBindBranch',
+      //   component: () => import('@/views/mt/bindBranch'),
+      //   meta: { title: '绑定门店', icon: 'table', roles: ['admin', 'marketing1'] }
+      // },
+      // {
+      //   path: 'mtunBindBranch',
+      //   name: 'mtunBindBranch',
+      //   component: () => import('@/views/mt/unbindBranch'),
+      //   meta: { title: '门店解绑', icon: 'table', roles: ['admin', 'marketing1'] }
+      // }
     ]
   },
   {

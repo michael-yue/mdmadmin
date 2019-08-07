@@ -11,11 +11,12 @@
         border
         size="small"
         height="100%">
-        <el-table-column prop="branchid" label="门店编码" width="" header-align="center" align="right" />
-        <el-table-column prop="branchname" label="门店名称" width="" header-align="center" align="left" />
-        <el-table-column prop="code" label="门店编码" width="" header-align="center" align="left" />
+        <el-table-column prop="code" label="门店编码" width="" header-align="center" align="right" />
+        <el-table-column prop="name" label="门店名称" width="" header-align="center" align="left" />
         <el-table-column prop="wxtype" label="微信点餐" width="" header-align="center" label-class-name	="header" align="left" />
         <el-table-column prop="mttype" label="是否接入美团" width="" header-align="center" align="right" />
+        <el-table-column prop="appId" label="AppId" width="" header-align="center" align="right" />
+        <el-table-column prop="mchId" label="子商户代码" width="" header-align="center" align="right" />
       </el-table>
       <vpagination :total="total" :display="limit" :current-page="current" @pagechange="pagechange" />
     </div>
@@ -61,8 +62,8 @@ export default {
     retrieve: function() {
       this.loading = true
       getPOSBranch().then(response => {
-        this.tableData = response.data.cards
-        this.total = response.data.totalnum
+        this.tableData = response.data
+        this.total = response.totalnum
         this.loading = false
       }).catch(error => {
         console.log(error)

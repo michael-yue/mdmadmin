@@ -63,12 +63,6 @@
           <el-form-item label="名称" prop="name">
             <el-input v-model="editForm.name" size="small" maxlength="20"/>
           </el-form-item>
-          <!-- <el-form-item label="截止日期" prop="submitDeadLine">
-            <el-date-picker
-              v-model="editForm.submitDeadLine"
-              type="date"
-              placeholder="选择日期"/>
-          </el-form-item> -->
           <el-form-item label="截止日期" prop="submitDeadLine1">
             <el-date-picker
               v-model="submitDeadLine1"
@@ -92,13 +86,11 @@
 </template>
 
 <script>
-import { listAllActivities, createActivity, updateActivity, startActivity, stopActivity, closeActivity } from '@/api/marketing'
+import { listAllActivities, createActivity, updateActivity, deleteActivity, startActivity, stopActivity, closeActivity } from '@/api/marketing'
 import { parseTime } from '@/utils'
 export default {
   name: 'ActivityList',
   filters: {
-    // format="yyyy 年 MM 月 dd 日"
-    // value-format="yyyy-MM-dd"
     formatDate(time) {
       const date = new Date(time)
       return parseTime(date, '{y}-{m}-{d}')
@@ -151,10 +143,10 @@ export default {
     showCreateDialog() {
       this.editForm.id = 0
       // this.editForm.activityId = ''
-      this.editForm.name = ''
-      this.editForm.note = ''
-      this.editForm.status = 0
-      this.submitDeadLine1 = ''
+      // this.editForm.name = ''
+      // this.editForm.note = ''
+      // this.editForm.status = 0
+      // this.submitDeadLine1 = ''
       this.dialogFormStatus = 'create'
       this.dialogFormVisible = true
     },
@@ -225,6 +217,14 @@ export default {
               console.log(e)
             })
         }
+      })
+    },
+    deleteActivity(row) {
+      var param = { activityId: row.id }
+      deleteActivity(param).then(res => {
+        this.listAllActivities()
+      }).catch(e => {
+        console.log(e)
       })
     },
     startActivity(row) {

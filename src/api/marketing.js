@@ -8,6 +8,14 @@ export function listOpenActivities() {
   })
 }
 
+export function listNotClosedActivities() {
+  return request({
+    url: '/api/marketing/listNotClosedActivities',
+    method: 'get',
+    params: {}
+  })
+}
+
 export function listAllActivities(pagenum, pagesize) {
   return request({
     url: '/api/marketing/listAllActivities',
@@ -55,6 +63,16 @@ export function createActivity(param) {
 export function updateActivity(param) {
   return request({
     url: '/api/marketing/updateActivity',
+    method: 'post',
+    data: {
+      param
+    }
+  })
+}
+
+export function deleteActivity(param) {
+  return request({
+    url: '/api/marketing/deleteActivity',
     method: 'post',
     data: {
       param
