@@ -168,3 +168,21 @@ export function listAllGoodsByBranch(branchId, activityId) {
     }
   })
 }
+
+export function listAllTemplateGoods() {
+  return request({
+    url: '/api/marketing/listAllTemplateGoods',
+    method: 'get',
+    params: {}
+  })
+}
+
+export function createGoodsFromTemplate(param) {
+  return request({
+    url: '/api/marketing/createGoodsFromTemplate',
+    method: 'post',
+    data: {
+      param
+    }
+  })
+}

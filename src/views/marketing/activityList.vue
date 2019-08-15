@@ -251,11 +251,11 @@ export default {
     // 分页处理
     pagechange: function(currentPage) {
       this.currentPage = currentPage
-      this.retrieveData()
+      this.listAllActivities()
     },
     handleSizeChange: function(currentSize) {
       this.limit = currentSize
-      this.retrieveData()
+      this.listAllActivities()
     }
   }
 }

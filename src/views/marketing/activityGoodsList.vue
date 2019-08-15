@@ -3,6 +3,7 @@
     <div ref="critheader" style="display:flex; justify-content: space-between; margin:5px; padding: 10px 10px 0 0 ">
       <MarketingActivitySelector typeclass="notclosed" @ActivityChanged="ActivityChanged" />
       <div v-if="!activied">
+        <el-button size="small" @click="openTemplateDialog">从模版选择</el-button>
         <el-button size="small" type="primary" @click="goCreate">新建</el-button>
       </div>
     </div>
@@ -17,7 +18,7 @@
         <el-table-column prop="id" label="" header-align="center" align="left">
           <template slot-scope="props">
             <div v-if="!activied">
-              <el-button type="text" size="small" @click="edit(props.row)"><i class="el-icon-edit" />修改</el-button>
+              <el-button type="text" size="small" @click="edit(props.row)">修改</el-button>
               <el-button type="text" size="small" @click="deleteGoods(props.row)"><i class="el-icon-delete" />删除</el-button>
             </div>
           </template>
@@ -104,11 +105,36 @@
         <el-button v-else type="primary" @click="updateGoods">修改保存</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      :visible.sync="dialogFormTemplate"
+      :fullscreen="false"
+      :modal="true"
+      :show-close="false"
+      :loading="loadingForm"
+      title="活动宣传品模版"
+      width="80%"
+      top="5vh">
+      <div>
+        <el-table ref="selectTemplateTable" :data="templateData" size="small" @selection-change="handleTemplateSelectionChange">
+          <el-table-column type="selection" width="55" />
+          <el-table-column prop="goodsId" label="编码" header-align="left" align="left" />
+          <el-table-column prop="name" label="名称" header-align="left" align="left" />
+          <el-table-column prop="category" label="种类" header-align="left" align="left" />
+          <el-table-column prop="specification" label="规格" header-align="left" align="left" />
+          <el-table-column prop="material" label="材料" header-align="left" align="left" />
+          <el-table-column prop="price" label="单价" header-align="left" align="left" />
+        </el-table>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="medium" @click="dialogFormTemplate=false">取 消</el-button>
+        <el-button type="primary" @click="confirmTemplateCopy">确认复制</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listAllGoods, createGoods, updateGoods, deleteGoods } from '@/api/marketing'
+import { listAllGoods, createGoods, updateGoods, deleteGoods, listAllTemplateGoods, createGoodsFromTemplate } from '@/api/marketing'
 import MarketingActivitySelector from '@/components/widgets/MarketingActivitySelector'
 export default {
   name: 'ActivityGoodsList',
@@ -127,6 +153,7 @@ export default {
       loadingForm: false,
       dialogFormVisible: false,
       dialogFormStatus: '',
+      dialogFormTemplate: false,
       editForm: {},
       activied: false,
       editFormRules: {
@@ -135,7 +162,9 @@ export default {
       },
       filelist: [],
       filelisturl: [],
-      imgdata: {}
+      imgdata: {},
+      templateData: [],
+      multipleSelection: []
     }
   },
   watch: {
@@ -298,11 +327,39 @@ export default {
     // 分页处理
     pagechange: function(currentPage) {
       this.currentPage = currentPage
-      this.retrieveData()
+      this.listAllGoods()
     },
     handleSizeChange: function(currentSize) {
       this.limit = currentSize
-      this.retrieveData()
+      this.listAllGoods()
+    },
+    openTemplateDialog() {
+      if (this.selectActivityId === 0) {
+        this.$message.error('需要先选择一活动')
+        return false
+      }
+      listAllTemplateGoods().then(res => {
+        this.templateData = res.data
+      })
+      this.dialogFormTemplate = true
+    },
+    confirmTemplateCopy() {
+      console.log(this.multipleSelection)
+      var param = {
+        activityId: this.selectActivityId,
+        templateGoods: this.multipleSelection
+      }
+      createGoodsFromTemplate(param).then(res => {
+        console.log(res)
+        if (res.code === 20000) {
+          this.dialogFormTemplate = false
+          this.multipleSelection = []
+          this.listAllGoods()
+        }
+      })
+    },
+    handleTemplateSelectionChange(val) {
+      this.multipleSelection = val
     }
   }
 }
