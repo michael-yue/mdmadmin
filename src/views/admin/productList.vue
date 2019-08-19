@@ -12,8 +12,8 @@
             <el-button size="small" style="margin-right:10px" @click="showNewProductTypeDialog" >添加</el-button>
           </div>
           <ul class="producttypes">
-            <li v-for="type in producttypes" :key="type.typeName" :class="{active: activeProductType == type}" @click="productTypeselected(type)">
-              <div>{{ type.typeName }}</div>
+            <li v-for="type in producttypes" :key="type.id" :class="{active: activeProductType == type}" @click="productTypeselected(type)">
+              <div>{{ type.newName }}</div>
               <div @click="showProductTypeDialog(type)"><i class="el-icon-edit" /></div>
             </li>
           </ul>
@@ -120,7 +120,7 @@
 <script>
 import store from '@/store'
 import ProductTypeSelector from '@/components/widgets/ProductTypeSelector'
-import { listAllProductType, listAllProduct, updateProductType, updateProduct, createProductType, createProduct } from '@/api/product.js'
+import { listProductType, listProductByType, listProduct, updateProductType, updateProduct, createProductType, createProduct } from '@/api/product.js'
 export default {
   name: 'Product',
   components: {
@@ -349,7 +349,7 @@ export default {
     },
     listAllCat: function() {
       var that = this
-      listAllProductType(this.selectedBranch).then(response => {
+      listProductType(this.selectedBranch).then(response => {
         that.producttypes = response.data
         if (that.producttypes.length > 0) {
           that.activeProductType = that.producttypes[0]
@@ -361,7 +361,7 @@ export default {
     },
     listAllProduct: function() {
       var that = this
-      listAllProduct(this.selectedBranch).then(response => {
+      listProduct(this.selectedBranch).then(response => {
         that.products = response.data
         that.loading = false
       }).catch(error => {
@@ -370,12 +370,13 @@ export default {
     },
     retrieveData: function() {
       var that = this
-      listAllProductType(this.selectedBranch).then(response => {
+      listProductType().then(response => {
         that.producttypes = response.data
         if (that.producttypes.length > 0) {
           that.activeProductType = that.producttypes[0]
         }
-        listAllProduct(this.selectedBranch).then(response => {
+        console.log(that.activeProductType)
+        listProductByType(that.activeProductType).then(response => {
           that.products = response.data
           that.filteredProducts = that.products.filter(function(item) {
             return item.productType.typeId === that.activeProductType.typeId

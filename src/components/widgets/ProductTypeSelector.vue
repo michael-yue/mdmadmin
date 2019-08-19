@@ -13,7 +13,7 @@
 
 <script>
 import store from '@/store'
-import { listAllProductType } from '@/api/product'
+import { listProductType } from '@/api/product'
 export default {
   name: 'SelectProductType',
   props: {
@@ -50,7 +50,7 @@ export default {
   methods: {
     retriveData: function() {
       var that = this
-      listAllProductType().then(response => {
+      listProductType().then(response => {
         that.productTypes = response.data
       }).catch(error => {
         console.log(error)
