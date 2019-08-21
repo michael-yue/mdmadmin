@@ -23,16 +23,16 @@
             <el-button size="small" style="margin-right:10px" @click="showNewProductDialg">添加</el-button>
           </div>
           <ul>
-            <li v-for="product in filteredProducts" :key="product.name">
+            <li v-for="product in filteredProducts" :key="product.id">
               <div style="display:flex">
                 <div style="flex:1; margin:auto; padding-left:20px; display:flex; justify-content:space-between">
-                  <span style="margin:auto; flex: 0 0 10%">{{ product.productId }}</span>
-                  <span style="margin:auto; flex: 0 0 40%">{{ product.productName }}</span>
+                  <span style="margin:auto; flex: 0 0 10%">{{ product.productid }}</span>
+                  <span style="margin:auto; flex: 0 0 40%">{{ product.name }}</span>
                   <span style="margin:auto; flex: 0 0 10%">¥{{ product.price }}</span>
                   <span style="margin:auto; flex: 0 0 10%">{{ product.orderSeq }}</span>
-                  <span style="margin:auto; flex: 0 0 30%">
-                    <el-button size="small" @click="showProductDialg(product)"><i class="el-icon-edit" />修改</el-button>
-                    <el-button size="small" @click="deleteProduct(product)"><i class="el-icon-delete" />删除</el-button>
+                  <span style="margin:auto; flex: 0 0 20%; text-align:right">
+                    <el-button type="text" size="small" @click="showProductDialg(product)"><i class="el-icon-edit" />修改</el-button>
+                    <el-button type="text" size="small" @click="deleteProduct(product)"><i class="el-icon-delete" />删除</el-button>
                   </span>
                 </div>
               </div>
@@ -120,7 +120,7 @@
 <script>
 import store from '@/store'
 import ProductTypeSelector from '@/components/widgets/ProductTypeSelector'
-import { listProductType, listProductByType, listProduct, updateProductType, updateProduct, createProductType, createProduct } from '@/api/product.js'
+import { listProductType, listProduct, updateProductType, updateProduct, createProductType, createProduct } from '@/api/product.js'
 export default {
   name: 'Product',
   components: {
@@ -184,7 +184,7 @@ export default {
     },
     activeProductType(val, oldval) {
       this.filteredProducts = this.products.filter(function(item) {
-        return item.productType.typeId === val.typeId
+        return item.typeid === val.id
       })
     }
   },
@@ -375,11 +375,10 @@ export default {
         if (that.producttypes.length > 0) {
           that.activeProductType = that.producttypes[0]
         }
-        console.log(that.activeProductType)
-        listProductByType(that.activeProductType).then(response => {
-          that.products = response.data
+        listProduct().then(response => {
+          that.products = response.data.products
           that.filteredProducts = that.products.filter(function(item) {
-            return item.productType.typeId === that.activeProductType.typeId
+            return item.typeid === that.activeProductType.id
           })
           that.loading = false
         }).catch(error => {
