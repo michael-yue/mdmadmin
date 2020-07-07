@@ -11,6 +11,7 @@
 
 <script>
 export default {
+  name: 'BreadCrumb',
   data() {
     return {
       levelList: null
