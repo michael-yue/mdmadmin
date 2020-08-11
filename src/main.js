@@ -8,6 +8,9 @@ import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
 
 import '@/styles/index.scss' // global css
 
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
+
 import App from './App'
 import router from './router'
 import store from './store'
