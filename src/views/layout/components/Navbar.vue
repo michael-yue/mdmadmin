@@ -1,9 +1,14 @@
 <template>
   <el-menu class="navbar" mode="horizontal">
     <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
-    <breadcrumb />
+    <breadcrumb v-if="device === 'desktop'" />
     <div class="avatar-container">
-      <el-button v-if="device === 'desktop'" size="mini" style="margin-right:10px" @click="toggle">全屏</el-button>
+      <!-- <el-button v-if="device === 'desktop'" size="mini" style="margin-right:10px" @click="toggle">
+        <svg-icon :icon-class="isFullscreen?'exit-fullscreen':'fullscreen'" />
+      </el-button> -->
+      <div v-if="device === 'desktop'" class="screen" @click="toggle">
+        <svg-icon :icon-class="isFullscreen?'exit-fullscreen':'fullscreen'" />
+      </div>
       <el-dropdown trigger="click">
         <div class="avatar-wrapper">
           <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
@@ -38,8 +43,8 @@ export default {
   },
   data() {
     return {
-      name: 'aa',
-      fullscreen: false
+      name: 'navbar',
+      isFullscreen: false
     }
   },
   computed: {
@@ -108,13 +113,41 @@ export default {
     color: red;
   }
   .avatar-container {
-    // height: 50px;
-    display: inline-block;
-    position: absolute;
-    right: 35px;
+    float: right;
+    height: 100%;
+    line-height: 50px;
+    margin-right: 10px; //add
+    &:focus {
+      outline: none;
+    }
+    .user-dropdown {
+      margin-right:20px;
+    }
+    .item {
+      margin-right:10px;
+      padding:0 5px;
+      display:inline-block;
+      .el-badge__content.is-fixed {
+        top: 8px;
+      }
+    }
+    .screen {
+      margin-right:10px;display:inline-block;
+      cursor: pointer;
+    }
+    .right-menu-item {
+      display: inline-block;
+      padding: 0 8px;
+      height: 100%;
+      font-size: 18px;
+      color: #5a5e66;
+      vertical-align: text-bottom;
+      cursor: pointer;
+    }
     .avatar-wrapper {
       cursor: pointer;
-      margin-top: 0px;
+      margin: 0px 20px 0 0;
+      // color:#f3f3f3; // theme
       position: relative;
       .user-avatar {
         width: 40px;
@@ -126,6 +159,7 @@ export default {
         right: -20px;
         top: 20px;
         font-size: 12px;
+        margin:auto
       }
     }
   }

@@ -160,21 +160,6 @@ export default {
     },
     handleDownload() {
       this.downloading = true
-      // require.ensure([], () => {
-      //   // const { export_json_to_excel } = require('@/vendor/Export2Excel')
-      //   // const tHeader = ['日期', '姓名', '地址']
-      //   // const filterVal = ['itemid', 'planamount1', 'actualamount1']
-      //   // const list = this.tableData
-      //   // const data = this.formatJson(filterVal, list)
-      //   // export_json_to_excel(tHeader, data, '利润报表')
-      //   const { export_table_to_excel } = require('@/vendor/Export2Excel')
-      //   export_table_to_excel(id)
-      //   this.downloading = false
-      // })
-      // const wb = XLSX.utils.table_to_book(document.querySelector('#datatable'))
-      /* get binary string as output */
-      // const wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
-      // 判断要导出的节点中是否有fixed的表格，如果有，转换excel时先将该dom移除，然后append回去，
       var fix = document.querySelector('.el-table__fixed')
       var wb
       if (fix) {
